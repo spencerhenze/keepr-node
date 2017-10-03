@@ -7,6 +7,13 @@ var corsOptions = require('./handlers').corsOptions
 var api = require('../models')
 var session = require('../authentication/sessions')
 var Auth = require('../authentication/auth')
+var Cloudinary = require('cloudinary');
+
+Cloudinary.config({
+	cloud_name: 'keepr',
+	api_key: '657153375644198',
+	api_secret: '2TgGfCxZF58sPEyiLen8_TiP7GI',
+})
 
 // ENABLE ROUTES IF USING app SIDE ROUTING
 // import routes from './routes'

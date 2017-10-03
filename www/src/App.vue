@@ -26,6 +26,7 @@
         <v-btn primary dark>Login</v-btn>
       </router-link>
       <v-btn v-if="loggedIn" error dark>Logout</v-btn>
+      <v-btn v-if="loggedIn" @click.stop="openCloud">Upload Something</v-btn>
 
     </v-toolbar>
 
@@ -44,6 +45,20 @@
     <v-footer>
       <span>&copy; 2017</span>
     </v-footer>
+
+    <v-dialog v-model="dialog" lazy absolute width="80%">
+      <v-card>
+        <v-card-title>
+          <div class="headline">Upload a keep</div>
+        </v-card-title>
+        <v-card-text>
+          <form @submit.prevent="openCloud">
+            <button type="submit">Add Image</button>
+          </form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
   </v-app>
 </template>
 
@@ -55,7 +70,8 @@
         items: [
           { icon: 'bubble_chart', title: 'Inspire' }
         ],
-        title: 'eepr'
+        title: 'eepr',
+        dialog: false
       }
     },
     computed: {
@@ -63,6 +79,17 @@
         return this.$store.state.loggedIn;
       }
     },
+    methods: {
+      openCloud() {
+        this.signedIn()
+        cloudinary.openUploadWidget({ cloud_name: 'keepr', upload_preset: 'zaloay8g' },
+          (error, result) => {
+            // result[0].tags = this.tags
+            this.$store.dispatch('sendDesign', result)
+          });
+      }
+    }
+
 
   }
 
