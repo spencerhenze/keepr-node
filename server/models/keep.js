@@ -6,7 +6,8 @@ let ObjectId = mongoose.Schema.ObjectId
 
 var schema = new mongoose.Schema({
 	name: { type: String, required: true },
-	description: { type: String },
+    description: { type: String },
+    imgUrl: { type: String, default: '//res.cloudinary.com/keepr/image/upload/v1507065886/placeholder_uanfhh.jpg'},
     created: { type: Number, default: Date.now() },
     tags: { type: [String], default: [] },
     saves: { type: Number, default: 0 },

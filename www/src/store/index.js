@@ -49,12 +49,26 @@ var store = new vuex.Store({
 
     },
     actions: {
-        GetKeeps({commit, dispatch}) {
+        GetKeeps({ commit, dispatch }) {
             api('keeps').then(res => {
                 commit('setResults', res.data)
             })
+        },
+        addKeep({ commit, dispatch }, keep) {
+            api.post('keeps', keep)
+                .then(res => {
+                    console.log(res)
+                    if(!res.error)
+                    {
+                        console.log('Keep saved!')
+                        console.log(res)
+                        // check out the res and see if you want to do anything with it.
+                        dispatch("GetKeeps")
+                    }
+
+                })
         }
-        
+
         // CreateAccountExample() {
         //     api.post('account', { email: "j@j.com", password: 'Testing123!' }).then(GetDataExample)
         // },

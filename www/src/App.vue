@@ -26,7 +26,7 @@
         <v-btn primary dark>Login</v-btn>
       </router-link>
       <v-btn v-if="loggedIn" error dark>Logout</v-btn>
-      <v-btn v-if="loggedIn" @click.stop="openCloud">Upload Something</v-btn>
+      <v-btn v-if="loggedIn" @click.stop="dialog=true">Upload Something</v-btn>
 
     </v-toolbar>
 
@@ -46,15 +46,27 @@
       <span>&copy; 2017</span>
     </v-footer>
 
-    <v-dialog v-model="dialog" lazy absolute width="80%">
+    <v-dialog v-model="dialog" lazy absolute width="40%">
       <v-card>
+        <a @click.prevent="openCloud">
+          <v-card-media class="modal-image" :src="src" height="300">
+            <v-container fill-height fluid>
+              <v-layout fill-height>
+              </v-layout>
+            </v-container>
+          </v-card-media>
+        </a>
+
         <v-card-title>
           <div class="headline">Upload a keep</div>
         </v-card-title>
         <v-card-text>
-          <form @submit.prevent="openCloud">
-            <button type="submit">Add Image</button>
-          </form>
+          <v-form @submit.prevent="openCloud">
+            <v-text-field label="Keep Title" v-model="keepTitle" required></v-text-field>
+            <v-text-field label="Description" v-model="keepDescription" required></v-text-field>
+            <v-btn success dark @click="submit">Send It!</v-btn>
+
+          </v-form>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -71,7 +83,11 @@
           { icon: 'bubble_chart', title: 'Inspire' }
         ],
         title: 'eepr',
-        dialog: false
+        dialog: false,
+        keepTitle: '',
+        keepDescription: '',
+        keepTags: '',
+        src: '//res.cloudinary.com/keepr/image/upload/v1507065886/placeholder_uanfhh.jpg'
       }
     },
     computed: {
@@ -81,11 +97,20 @@
     },
     methods: {
       openCloud() {
-        this.signedIn()
+        // this.signedIn()
         cloudinary.openUploadWidget({ cloud_name: 'keepr', upload_preset: 'zaloay8g' },
           (error, result) => {
-            // result[0].tags = this.tags
-            this.$store.dispatch('sendDesign', result)
+            this.src = result[0].url
+
+            // build the keep item to send to the backend
+            var keep = {
+              name: this.keepTitle,
+              description: this.keepDescription,
+              imgUrl: result[0].url,
+              tags: this.keepTags.split(",")
+            }
+            
+            this.$store.dispatch('addKeep', keep)
           });
       }
     }
