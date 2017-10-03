@@ -9,7 +9,7 @@ module.exports = {
         method(req, res, next) {
             let action = 'Get vaults that the user has created'
             // query the vaults collection to find all keeps with a creatorId that matches the uid on the session
-            Vaults.find({ creatorId: req.session.uid }).sort('-created').then(vaults => {
+            Vaults.find({ creatorId: req.session.uid }).then(vaults => {
                 res.send(handleResponse(action, vaults))
             })
                 .catch(error => {

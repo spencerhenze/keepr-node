@@ -56,6 +56,20 @@ router.delete('/logout', (req, res) => {
   })
 })
 
+router.delete('/deleteaccount', (req, res) => {
+  Users.findByIdAndRemove(req.session.uid)
+  .then((user) => {
+    req.session.uid = user._id
+    req.session.destroy()
+    res.send({
+      message: 'Successfully deleted user account',
+    })
+  })
+  .catch(err => {
+    res.send({ error: err })
+  })
+})
+
 
 router.get('/authenticate', (req,res) => {
   Users.findById(req.session.uid).then(user => {

@@ -7,6 +7,7 @@ var schema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
   created: { type: String, default: new Date() },
+  keeps: { type: [ObjectId], ref: models.keep.name, default: []},
   creatorId: {type: ObjectId, ref: models.user.name, required: true},
 
 });

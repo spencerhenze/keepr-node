@@ -57,38 +57,60 @@ function API(model, schema) {
       })
   }
 
-  function update(req, res, next) {
-    var action = actions.update
-    var id = req.params.id || req.query.id || '';
+	function update(req, res, next) {
+		var action = actions.update
+		var id = req.params.id || req.query.id || '';
 
-    if (!id) {
-      return next(handleResponse(action, null, { error: { message: 'Invalid request no id provided' } }))
-    }
+		if (!id) {
+			return next(handleResponse(action, null, { error: { message: 'Invalid request no id provided' } }))
+		}
 
-    schema.findOneAndUpdate({ _id: id }, req.body)
-      .then(data => {
-        return res.send(handleResponse(action, { message: 'Successfully updated' }))
-      })
-      .catch(error => {
-        return next(handleResponse(action, null, error))
-      })
-  }
+		schema.findById(id).select('creatorId').exec()
+			.then(data => {
+        // authorization check
+				if (data.creatorId.toString() != req.session.uid.toString()) {
+					return next(handleResponse(action, null, { error: { message: 'Not authorized' } }))
+        }
+        // If authorization check passes
+				data.update(req.body)
+					.then(() => {
+						return res.send(handleResponse(action, { message: 'Successfully updated' }))
+					})
+					.catch(error => {
+						return next(handleResponse(action, null, error))
+					})
+			})
+			.catch(error => {
+				return next(handleResponse(action, null, error))
+			})
+	}
 
-  function remove(req, res, next) {
-    var action = actions.remove
-    var id = req.params.id || req.query.id || '';
+	function remove(req, res, next) {
+		var action = actions.remove
+		var id = req.params.id || req.query.id || '';
 
-    if (!id) {
-      return next(handleResponse(action, null, { error: { message: 'Invalid request no id provided' } }))
-    }
+		if (!id) {
+			return next(handleResponse(action, null, { error: { message: 'Invalid request no id provided' } }))
+		}
 
-    schema.findOneAndRemove({ _id: id }).then(function (data) {
-      return res.send(handleResponse(action, data))
-    })
-      .catch(error => {
-        return next(handleResponse(action, null, error))
-      })
-  }
+		schema.findById(id).select('creatorId').exec()
+			.then(data => {
+				if (data.creatorId.toString() != req.session.uid.toString()) {
+					return next(handleResponse(action, null, { error: { message: 'Not authorized' } }))
+				}
+
+				data.remove()
+					.then(() => {
+						return res.send(handleResponse(action, { message: 'Successfully removed' }))
+					})
+					.catch(error => {
+						return next(handleResponse(action, null, error))
+					})
+			})
+			.catch(error => {
+				return next(handleResponse(action, null, error))
+			})
+	}
 
   function handleResponse(action, data, error) {
     var response = {

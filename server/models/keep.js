@@ -8,11 +8,11 @@ var schema = new mongoose.Schema({
 	name: { type: String, required: true },
 	description: { type: String },
     created: { type: Number, default: Date.now() },
-    tags: { type: Array, default: [] },
+    tags: { type: [String], default: [] },
     saves: { type: Number, default: 0 },
-    views: { type: Number, default: 0 },
+    views: { type: [ObjectId], ref:models.user.name, default: [] },
 	// Relationships
-    vaultId: { type: ObjectId, ref: models.vault, required: true },
+    // vaultId: { type: ObjectId, ref: models.vault, required: true },
     creatorId: {type: ObjectId, ref: models.user.name, required: true},
 });
 
