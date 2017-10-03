@@ -46,7 +46,10 @@
       <span>&copy; 2017</span>
     </v-footer>
 
-    <v-dialog v-model="dialog" lazy absolute width="40%">
+    <!-- add keep modal -->
+    <!-- <v-layout row>
+      <v-flex xs12 sm3> -->
+    <v-dialog v-model="dialog" lazy absolute :width="viewWidth">
       <v-card>
         <a @click.prevent="openCloud">
           <v-card-media class="modal-image" :src="src" height="300">
@@ -71,6 +74,8 @@
       </v-card>
     </v-dialog>
 
+    <!-- </v-flex>
+    </v-layout> -->
   </v-app>
 </template>
 
@@ -78,12 +83,14 @@
   export default {
     data() {
       return {
+        viewWidth: Math.log10(Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / 10) + (.6 * Math.max(document.documentElement.clientWidth, window.innerWidth)),
         drawer: false,
         items: [
           { icon: 'bubble_chart', title: 'Inspire' }
         ],
         title: 'eepr',
         dialog: false,
+        // addKeepWidth: setWidth(),
         keepTitle: '',
         keepDescription: '',
         keepTags: '',
@@ -109,7 +116,7 @@
               imgUrl: result[0].url,
               tags: this.keepTags.split(",")
             }
-            
+
             this.$store.dispatch('addKeep', keep)
           });
       }
@@ -119,3 +126,7 @@
   }
 
 </script>
+
+<style scoped>
+
+</style>
