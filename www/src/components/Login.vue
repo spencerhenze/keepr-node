@@ -1,7 +1,6 @@
 <template>
     <div class="login">
 
-
         <!-- success message only displays when successful user created -->
         <v-card v-if="successMessage">
             <v-card-title class="headline">Success</v-card-title>
@@ -13,15 +12,14 @@
         </v-card>
 
         <!-- fail message displays on login fail -->
-        <v-card v-else-if="failMessage">
+        <v-card v-else-if="loginError">
             <v-card-title class="headline">Oops!</v-card-title>
             <v-card-text>
                 <p>
                     <v-icon medium>error_outline</v-icon> Login Failed </p>
-                <v-btn error dark @click="failMessage=false">Try Again</v-btn>
+                <v-btn error dark @click="ResetLoginError">Try Again</v-btn>
             </v-card-text>
         </v-card>
-
 
 
         <!-- Register form -->
@@ -65,8 +63,8 @@
                     <v-text-field label="Email" v-model="email" required></v-text-field>
                     <v-text-field label="Password" v-model="password" required></v-text-field>
                     <v-btn v-if="email && password" success dark @click="Login">Send It!</v-btn>
-                    <v-btn v-else success dark @click="Login" disabled>Send It!</v-btn>
-
+                    <v-btn v-else success dark @click.stop="Login" disabled>Send It!</v-btn>
+                    <!-- go to register form -->
                     <v-btn primary dark @click="registerForm = true">Register</v-btn>
                 </v-form>
 
@@ -89,7 +87,6 @@
                 password: null,
                 confirmPassword: null,
                 successMessage: false,
-                failMessage: false,
             }
         },
         props: [
@@ -102,9 +99,16 @@
                     password: this.password
                 }
                 this.$store.dispatch('Login', credentials)
-                if (!loggedIn) {
-                    failMessage = true;
-                }
+                    .then(() => {
+                        console.log("this is the user object:")
+                        console.log(this.user)
+                        if (this.user.name) {
+                            this.CloseLoginWindow();
+                        }
+
+                        this.failMessage = true;
+
+                    })
             },
             RegisterUser() {
                 if (this.password == this.confirmPassword) {
@@ -119,11 +123,20 @@
             },
             CloseLoginWindow() {
                 this.$store.dispatch("SetLoginWindow", false);
+            },
+            ResetLoginError() {
+                this.$store.dispatch("ResetLoginError")
             }
         },
         computed: {
             loggedIn() {
                 return this.$store.state.loggedIn;
+            },
+            user() {
+                return this.$store.state.user;
+            },
+            loginError() {
+                return this.$store.state.loginError;
             }
         }
     }

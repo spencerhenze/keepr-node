@@ -2,17 +2,24 @@ import vue from 'vue'
 import vuex from 'vuex'
 import $ from 'jquery'
 import axios from 'axios'
+import router from '../router'
 
 
 var production = !window.location.host.includes('localhost')
 // var ip = production ? '//deployment location' : '//localhost:5000'
-var ip = '//localhost:3000/'
+var baseUrl = production ? '/deploymentaddress/' : '//localhost:3000/';
 
 vue.use(vuex)
 
 let api = axios.create({
-    baseURL: 'http://localhost:3000/api/',
+    baseURL: baseUrl + 'api/',
     timeout: 10000,
+    withCredentials: true
+})
+
+let auth = axios.create({
+    baseURL: baseUrl,
+    timeout: 40000,
     withCredentials: true
 })
 
@@ -28,14 +35,22 @@ var store = new vuex.Store({
             { title: 'Mountain Therapy', imgUrl: '//res.cloudinary.com/dvh7zccln/image/upload/v1501022397/SHP_0604_x1szrl.jpg', description: "Sometimes you just have to escape to the mountains. Check out our hottest recommendations for places to get your zen on.", flex: 6, views: 10, saves: 10 },
             { title: 'Sick Gnar', imgUrl: '//res.cloudinary.com/dvh7zccln/image/upload/v1500221424/SHP_1220_e3cjkd.jpg', description: "Just shred bro. Check out these monster waves on tiny lakes.", flex: 6, views: 100, saves: 45 }
         ],
-        loginWindow: false
+        loginWindow: false,
+        loginError: false,
+        error: {}
     },
     mutations: {
+        setDefaultState(store) {
+            //clear everything (called on logout)
+        },
         SetLoginWindow(store, value) {
             store.loginWindow = value;
         },
         setLoggedIn(store, value) {
             store.loggedIn = value;
+        },
+        SetLoginError(store, value) {
+            store.loginError = value;
         },
         setUser(store, user) {
             store.user = user;
@@ -57,31 +72,54 @@ var store = new vuex.Store({
                 flexIndex++;
             })
             store.results = data;
+        },
+        handleError(state, err) {
+            state.error = err
         }
 
     },
     actions: {
-        SetLoginWindow({commit, dispatch}, value) {
+        SetLoginWindow({ commit, dispatch }, value) {
             commit("SetLoginWindow", value)
         },
-        Register({commit, dispatch}, user) {
+        ResetLoginError({ commit, dispatch }) {
+            commit("SetLoginError", false)
+        },
+
+        Register({ commit, dispatch }, user) {
             $.post(ip + "register", user)
-            .then(res => {
-                console.log("user created successfully")
-                commit("setLoggedIn", true)
-            })
-            .catch(err => {
-                console.log("your post request to make a new user failed. Here is the error:\n" + err)
-            })
+                .then(res => {
+                    console.log("user created successfully")
+                    commit("setLoggedIn", true)
+                })
+                .catch(err => {
+                    console.log("your post request to make a new user failed. Here is the error:\n" + err)
+                })
         },
-        Login({commit, dispatch}, credentials) {
-            $.post(ip + 'login', credentials)
-            .then(res => {
-                commit("setLoggedIn", true)
-                commit("setUser", res.data)
-                dispatch('GetVaults')
-            })
+        Login({ commit, dispatch }, credentials) {
+            auth.post('login', credentials)
+                .then(res => {
+                    console.log("made it back from login. Here is the response:")
+                    console.log(res)
+                    if (res.error) {
+                        console.log("Login failed at server")
+                        commit("SetLoginError", true);
+                        return
+                    }
+                    commit("setLoggedIn", true)
+                    commit("setUser", res.data.data)
+                    commit("SetLoginWindow", false)
+                    dispatch('GetVaults')
+                })
         },
+        Logout({ commit, dispatch }) {
+            auth.delete('logout')
+                .then((res) => {
+                    dispatch('getAuth')
+                    commit('setDefaultState')
+                })
+        },
+
         GetVaults({ commit, dispatch }) {
             api('my-vaults')
                 .then(res => {
@@ -130,6 +168,24 @@ var store = new vuex.Store({
                 })
                 .catch(error => {
                     console.log(error)
+                })
+        },
+        getAuth({ commit, dispatch }) {
+            auth('authenticate')
+                .then(res => {
+                    console.log("authenticated. Here is the response:")
+                    console.log(res)
+                    if (res.data.error) {
+                        console.log("no session found")
+                        return router.push('/')
+                    }
+                    commit('setUser', res.data.data)
+                    commit('setLoggedIn', true)
+                    router.push('/')
+                })
+                .catch(err => {
+                    commit('handleError', err)
+                    router.push('/')
                 })
         }
 

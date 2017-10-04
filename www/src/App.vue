@@ -48,7 +48,7 @@
       <v-btn v-if="loggedIn" fab dark medium class="transparent" style="box-shadow:none" @click.stop="dialog=true">
         <v-icon>add_circle</v-icon>
       </v-btn>
-      <v-btn v-if="loggedIn" fab dark small class="red" style="margin-right:15px">
+      <v-btn v-if="loggedIn" fab dark small class="red" style="margin-right:15px" @click="Logout">
         <v-icon dark>fa-sign-out</v-icon>
       </v-btn>
 
@@ -135,6 +135,7 @@
       Login
     },
     mounted() {
+      this.$store.dispatch("getAuth");
       // when logged in, get the vaults every time this page loads
       if (this.$store.loggedIn) {
         this.$store.dispatch('GetVaults');
@@ -176,6 +177,9 @@
         }
         console.log("logging from App.vue sendKeep() method:\n" + keep)
         this.$store.dispatch('AddKeep', keep)
+      },
+      Logout() {
+        this.$store.dispatch("Logout")
       }
     }
 
