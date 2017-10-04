@@ -44,9 +44,7 @@
       <img src="http://res.cloudinary.com/dvh7zccln/image/upload/v1506964113/powerline_k_ready_qjmbox.png" alt="" style="max-height:70px">
       <v-toolbar-title v-text="title" style="margin-left: -15px"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <router-link v-if="!loggedIn" :to="{name: 'Login'}">
-        <v-btn primary dark>Login</v-btn>
-      </router-link>
+        <v-btn v-if="!loggedIn" primary dark @click.stop="OpenLoginWindow">Login</v-btn>
       <v-btn v-if="loggedIn" fab dark medium class="transparent" style="box-shadow:none" @click.stop="dialog=true">
         <v-icon>add_circle</v-icon>
       </v-btn>
@@ -97,16 +95,23 @@
             <v-switch label="Private Keep" v-model="private"></v-switch>
             <v-btn v-if="selectedVault && keepTitle && keepDescription" success dark @click="sendKeep">Send It!</v-btn>
             <v-btn v-else success dark @click="sendKeep" disabled>Send It!</v-btn>
-
           </v-form>
+
         </v-card-text>
       </v-card>
+    </v-dialog>
+
+    <!-- login/register modal -->
+    <v-dialog v-model="loginWindow" lazy absolute width="50%">
+      <login props="loginWindow"></login>
     </v-dialog>
 
   </v-app>
 </template>
 
 <script>
+  import Login from './components/login'
+
   export default {
     data() {
       return {
@@ -126,9 +131,12 @@
         private: false
       }
     },
+    components: {
+      Login
+    },
     mounted() {
       // when logged in, get the vaults every time this page loads
-      if(this.$store.loggedIn){
+      if (this.$store.loggedIn) {
         this.$store.dispatch('GetVaults');
       }
     },
@@ -138,9 +146,15 @@
       },
       vaults() {
         return this.$store.state.vaults;
+      },
+      loginWindow() {
+        return this.$store.state.loginWindow;
       }
     },
     methods: {
+      OpenLoginWindow() {
+        this.$store.dispatch("SetLoginWindow", true);
+      },
       openCloud() {
         // this.signedIn()
         cloudinary.openUploadWidget({ cloud_name: 'keepr', upload_preset: 'zaloay8g' },

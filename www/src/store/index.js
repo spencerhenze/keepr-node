@@ -27,10 +27,13 @@ var store = new vuex.Store({
             { title: 'Boise Homes', imgUrl: '//res.cloudinary.com/dvh7zccln/image/upload/v1506560973/SHP_0282_e5rzfg.jpg', description: "Boise is the greatest place on earth to live. Californians have figured that out so we've built a bunch of homes. Check them out!", flex: 12, views: 32, saves: 5 },
             { title: 'Mountain Therapy', imgUrl: '//res.cloudinary.com/dvh7zccln/image/upload/v1501022397/SHP_0604_x1szrl.jpg', description: "Sometimes you just have to escape to the mountains. Check out our hottest recommendations for places to get your zen on.", flex: 6, views: 10, saves: 10 },
             { title: 'Sick Gnar', imgUrl: '//res.cloudinary.com/dvh7zccln/image/upload/v1500221424/SHP_1220_e3cjkd.jpg', description: "Just shred bro. Check out these monster waves on tiny lakes.", flex: 6, views: 100, saves: 45 }
-        ]
-
+        ],
+        loginWindow: false
     },
     mutations: {
+        SetLoginWindow(store, value) {
+            store.loginWindow = value;
+        },
         setLoggedIn(store, value) {
             store.loggedIn = value;
         },
@@ -58,10 +61,14 @@ var store = new vuex.Store({
 
     },
     actions: {
+        SetLoginWindow({commit, dispatch}, value) {
+            commit("SetLoginWindow", value)
+        },
         Register({commit, dispatch}, user) {
             $.post(ip + "register", user)
             .then(res => {
                 console.log("user created successfully")
+                commit("setLoggedIn", true)
             })
             .catch(err => {
                 console.log("your post request to make a new user failed. Here is the error:\n" + err)
