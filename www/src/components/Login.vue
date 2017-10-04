@@ -26,11 +26,13 @@
 
         <!-- Register form -->
         <v-card v-else-if="registerForm">
-            <v-card-title class="headline">Register</v-card-title>
-            <!-- <v-spacer></v-spacer>
-            <v-btn @click="CloseLoginWindow">
-                <v-icon medium>close</v-icon>
-            </v-btn> -->
+            <div class="loginModalHeader">
+                <v-card-title class="headline">Log In</v-card-title>
+                <v-spacer></v-spacer>
+                <v-btn fab medium class="transparent" style="box-shadow:none" @click="CloseLoginWindow">
+                    <v-icon medium>close</v-icon>
+                </v-btn>
+            </div>
             <v-card-text>
 
                 <v-form>
