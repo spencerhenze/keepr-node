@@ -25,8 +25,10 @@
       <router-link v-if="!loggedIn" :to="{name: 'Login'}">
         <v-btn primary dark>Login</v-btn>
       </router-link>
+      <v-btn v-if="loggedIn" @click.stop="dialog=true">
+        <v-icon>add_circle</v-icon>
+      </v-btn>
       <v-btn v-if="loggedIn" error dark>Logout</v-btn>
-      <v-btn v-if="loggedIn" @click.stop="dialog=true">Upload Something</v-btn>
 
     </v-toolbar>
 
@@ -47,9 +49,7 @@
     </v-footer>
 
     <!-- add keep modal -->
-    <!-- <v-layout row>
-      <v-flex xs12 sm3> -->
-    <v-dialog v-model="dialog" lazy absolute :width="viewWidth">
+    <v-dialog v-model="dialog" lazy absolute width="50%">
       <v-card>
         <a @click.prevent="openCloud">
           <v-card-media class="modal-image" :src="src" height="300">
@@ -64,18 +64,28 @@
           <div class="headline">Upload a keep</div>
         </v-card-title>
         <v-card-text>
-          <v-form @submit.prevent="openCloud">
+          <!-- need to get the vault from the dropdown menu -->
+          <v-form>
+            <v-menu offset-y>
+              <v-btn primary dark slot="activator">Choose Vault</v-btn>
+              <v-list>
+                <v-list-tile v-for="vault in vaults" :key="vault.title" @click="selectVault(vault)">
+                  <v-list-tile-title>{{vault.title}}</v-list-tile-title>
+                </v-list-tile>
+              </v-list>
+            </v-menu>
+            <h3 class="headline" style="margin-top:10px">Posting to: {{selectedVault.title}}</h3>
             <v-text-field label="Keep Title" v-model="keepTitle" required></v-text-field>
             <v-text-field label="Description" v-model="keepDescription" required></v-text-field>
-            <v-btn success dark @click="submit">Send It!</v-btn>
+            <v-text-field label="Tags (comma separated, no spaces)" v-model="keepTags"></v-text-field>
+            <v-btn v-if="vaultSelected" success dark @click="submit">Send It!</v-btn>
+            <v-btn v-else success dark @click="submit" disabled>Send It!</v-btn>
 
           </v-form>
         </v-card-text>
       </v-card>
     </v-dialog>
 
-    <!-- </v-flex>
-    </v-layout> -->
   </v-app>
 </template>
 
@@ -83,7 +93,7 @@
   export default {
     data() {
       return {
-        viewWidth: Math.log10(Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / 10) + (.6 * Math.max(document.documentElement.clientWidth, window.innerWidth)),
+        // viewWidth: Math.log10(Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / 10) + (.6 * Math.max(document.documentElement.clientWidth, window.innerWidth)),
         drawer: false,
         items: [
           { icon: 'bubble_chart', title: 'Inspire' }
@@ -94,12 +104,17 @@
         keepTitle: '',
         keepDescription: '',
         keepTags: '',
-        src: '//res.cloudinary.com/keepr/image/upload/v1507065886/placeholder_uanfhh.jpg'
+        src: '//res.cloudinary.com/keepr/image/upload/v1507065886/placeholder_uanfhh.jpg',
+        selectedVault: {},
+        vaultSelected: false
       }
     },
     computed: {
       loggedIn() {
         return this.$store.state.loggedIn;
+      },
+      vaults() {
+        return this.$store.state.vaults;
       }
     },
     methods: {
@@ -110,15 +125,24 @@
             this.src = result[0].url
 
             // build the keep item to send to the backend
-            var keep = {
-              name: this.keepTitle,
-              description: this.keepDescription,
-              imgUrl: result[0].url,
-              tags: this.keepTags.split(",")
-            }
 
-            this.$store.dispatch('addKeep', keep)
           });
+      },
+      selectVault(vault) {
+        this.selectedVault = vault;
+        this.vaultSelected = true;
+        console.log(this.selectedVault)
+      },
+      submit() {
+        var keep = {
+          name: this.keepTitle,
+          description: this.keepDescription,
+          imgUrl: this.src,
+          tags: this.keepTags.split(","),
+          vault: this.selectedVault._id
+        }
+        console.log(keep)
+        this.$store.dispatch('addKeep', keep)
       }
     }
 

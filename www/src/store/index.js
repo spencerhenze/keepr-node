@@ -19,6 +19,7 @@ let api = axios.create({
 var store = new vuex.Store({
     state: {
         user: {},
+        vaults: [{ _id: "laiw;o0394u0", title: "cool Vault" }, { _id: "32342kl2;lkj", title: "awesome vault" }],
         loggedIn: false,
         results: [
             { title: 'Boise Homes', imgUrl: '//res.cloudinary.com/dvh7zccln/image/upload/v1506560973/SHP_0282_e5rzfg.jpg', description: "Boise is the greatest place on earth to live. Californians have figured that out so we've built a bunch of homes. Check them out!", flex: 12, views: 32, saves: 5 },
@@ -58,8 +59,7 @@ var store = new vuex.Store({
             api.post('keeps', keep)
                 .then(res => {
                     console.log(res)
-                    if(!res.error)
-                    {
+                    if (!res.error) {
                         console.log('Keep saved!')
                         console.log(res)
                         // check out the res and see if you want to do anything with it.
