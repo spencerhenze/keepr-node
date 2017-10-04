@@ -44,7 +44,7 @@
       <img src="http://res.cloudinary.com/dvh7zccln/image/upload/v1506964113/powerline_k_ready_qjmbox.png" alt="" style="max-height:70px">
       <v-toolbar-title v-text="title" style="margin-left: -15px"></v-toolbar-title>
       <v-spacer></v-spacer>
-        <v-btn v-if="!loggedIn" primary dark @click.stop="OpenLoginWindow">Login</v-btn>
+      <v-btn v-if="!loggedIn" primary dark @click.stop="OpenLoginWindow">Login</v-btn>
       <v-btn v-if="loggedIn" fab dark medium class="transparent" style="box-shadow:none" @click.stop="dialog=true">
         <v-icon>add_circle</v-icon>
       </v-btn>
@@ -102,7 +102,7 @@
     </v-dialog>
 
     <!-- login/register modal -->
-    <v-dialog v-model="loginWindow" lazy absolute width="50%">
+    <v-dialog v-model="loginWindow" lazy absolute persistent width="50%">
       <login props="loginWindow"></login>
     </v-dialog>
 
@@ -128,7 +128,7 @@
         keepTags: null,
         src: '//res.cloudinary.com/keepr/image/upload/v1507065886/placeholder_uanfhh.jpg',
         selectedVault: null,
-        private: false
+        private: false,
       }
     },
     components: {
@@ -154,6 +154,9 @@
     methods: {
       OpenLoginWindow() {
         this.$store.dispatch("SetLoginWindow", true);
+      },
+      CloseLoginWindow() {
+        this.$store.dispatch("SetLoginWindow", false)
       },
       openCloud() {
         // this.signedIn()

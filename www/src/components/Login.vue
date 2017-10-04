@@ -16,7 +16,8 @@
         <v-card v-else-if="failMessage">
             <v-card-title class="headline">Oops!</v-card-title>
             <v-card-text>
-                <p><v-icon medium>error_outline</v-icon> Login Failed </p>
+                <p>
+                    <v-icon medium>error_outline</v-icon> Login Failed </p>
                 <v-btn error dark @click="failMessage=false">Try Again</v-btn>
             </v-card-text>
         </v-card>
@@ -26,6 +27,10 @@
         <!-- Register form -->
         <v-card v-else-if="registerForm">
             <v-card-title class="headline">Register</v-card-title>
+            <!-- <v-spacer></v-spacer>
+            <v-btn @click="CloseLoginWindow">
+                <v-icon medium>close</v-icon>
+            </v-btn> -->
             <v-card-text>
 
                 <v-form>
@@ -44,7 +49,14 @@
 
         <!-- login form -->
         <v-card v-else>
-            <v-card-title class="headline">Log In</v-card-title>
+            <div class="loginModalHeader">
+                <v-card-title class="headline">Log In</v-card-title>
+                <v-spacer></v-spacer>
+                <v-btn fab medium class="transparent" style="box-shadow:none" @click="CloseLoginWindow">
+                    <v-icon medium>close</v-icon>
+                </v-btn>
+            </div>
+
             <v-card-text>
 
                 <v-form>
@@ -88,7 +100,7 @@
                     password: this.password
                 }
                 this.$store.dispatch('Login', credentials)
-                if(!loggedIn) {
+                if (!loggedIn) {
                     failMessage = true;
                 }
             },
@@ -100,7 +112,7 @@
                         password: this.password
                     }
                     this.$store.dispatch('Register', newUser)
-                    this.successMessage=true;
+                    this.successMessage = true;
                 }
             },
             CloseLoginWindow() {
@@ -118,5 +130,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+    .loginModalHeader {
+        display: flex;
+    }
 </style>
