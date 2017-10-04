@@ -126,6 +126,12 @@
         private: false
       }
     },
+    mounted() {
+      // when logged in, get the vaults every time this page loads
+      if(this.$store.loggedIn){
+        this.$store.dispatch('GetVaults');
+      }
+    },
     computed: {
       loggedIn() {
         return this.$store.state.loggedIn;

@@ -2,11 +2,16 @@
     <div class="login">
 
         <v-layout row>
-            <v-flex xs12>
-                <h2>This is where you log in</h2>
-                <router-link :to="{name: 'Home'}">
-                    <v-btn success dark @click="toggleLoggedIn">Login</v-btn>
-                </router-link>
+            <v-flex xs4>
+                <h2>Log In</h2>
+                <v-form>
+                    <v-text-field label="Email" v-model="email" required></v-text-field>
+                    <v-text-field label="Password" v-model="password" required></v-text-field>
+                    <v-btn v-if="email && password" success dark @click="Login">Send It!</v-btn>
+                    <v-btn v-else success dark @click="Login" disabled>Send It!</v-btn>
+                    
+                    <v-btn primary dark @click="registerForm = true">Register</v-btn>
+                </v-form>
             </v-flex>
         </v-layout>
 
@@ -18,12 +23,18 @@
         name: 'login',
         data() {
             return {
-                msg: 'Welcome to Your Vue.js App'
+                registerForm: false,
+                email: null,
+                password: null
             }
         },
         methods: {
-            toggleLoggedIn() {
-                this.$store.commit('toggleLoggedIn')
+            Login() {
+                var credentials = {
+                    email: this.email,
+                    password: this.password
+                }
+                this.$store.dispatch('Login', credentials)
             }
         }
     }

@@ -5,12 +5,13 @@ import axios from 'axios'
 
 
 var production = !window.location.host.includes('localhost')
-var ip = production ? '//deployment location' : '//localhost:5000'
+// var ip = production ? '//deployment location' : '//localhost:5000'
+var ip = '//localhost:3000/'
 
 vue.use(vuex)
 
 let api = axios.create({
-    baseURL: 'http://localhost:5000/api/',
+    baseURL: 'http://localhost:3000/api/',
     timeout: 10000,
     withCredentials: true
 })
@@ -19,7 +20,8 @@ let api = axios.create({
 var store = new vuex.Store({
     state: {
         user: {},
-        vaults: [{ _id: "laiw;o0394u0", title: "cool Vault" }, { _id: "32342kl2;lkj", title: "awesome vault" }],
+        // vaults: [{ _id: "laiw;o0394u0", title: "cool Vault" }, { _id: "32342kl2;lkj", title: "awesome vault" }],
+        vaults: [],
         loggedIn: false,
         results: [
             { title: 'Boise Homes', imgUrl: '//res.cloudinary.com/dvh7zccln/image/upload/v1506560973/SHP_0282_e5rzfg.jpg', description: "Boise is the greatest place on earth to live. Californians have figured that out so we've built a bunch of homes. Check them out!", flex: 12, views: 32, saves: 5 },
@@ -29,8 +31,14 @@ var store = new vuex.Store({
 
     },
     mutations: {
-        toggleLoggedIn(store, value) {
-            store.loggedIn = !store.loggedIn;
+        setLoggedIn(store, value) {
+            store.loggedIn = value;
+        },
+        setUser(store, user) {
+            store.user = user;
+        },
+        setVaults(store, vaults) {
+            store.vaults = vaults;
         },
         setResults(store, data) {
             debugger
@@ -50,6 +58,30 @@ var store = new vuex.Store({
 
     },
     actions: {
+        Register({commit, dispatch}, user) {
+            $.post(ip + "register", user)
+            .then(res => {
+                console.log("user created successfully")
+            })
+            .catch(err => {
+                console.log("your post request to make a new user failed. Here is the error:\n" + err)
+            })
+        },
+        Login({commit, dispatch}, credentials) {
+            $.post(ip + 'login', credentials)
+            .then(res => {
+                commit("setLoggedIn", true)
+                commit("setUser", res.data)
+                dispatch('GetVaults')
+            })
+        },
+        GetVaults({ commit, dispatch }) {
+            api('my-vaults')
+                .then(res => {
+                    console.log(res.data.data)
+                    commit('setVaults', res.data.data)
+                })
+        },
         GetKeeps({ commit, dispatch }) {
             api('keeps').then(res => {
                 commit('setResults', res.data)

@@ -10,12 +10,12 @@ const actions = {
     vault: {
       name: 'Vault',
       endpoint: 'vaults',
-    //   useCustomRoutes: true
+      useCustomRoutes: true
     },
     keep: {
       name: 'Keep',
       endpoint: 'keeps',
-    //   useCustomRoutes: true
+      // useCustomRoutes: true
     },
     // task: {
     //   name: 'Task',
