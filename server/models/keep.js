@@ -8,8 +8,9 @@ var schema = new mongoose.Schema({
 	name: { type: String, required: true },
     description: { type: String },
     imgUrl: { type: String, default: '//res.cloudinary.com/keepr/image/upload/v1507065886/placeholder_uanfhh.jpg'},
-    created: { type: Number, default: Date.now() },
     tags: { type: [String], default: [] },
+    private: { type: Boolean, required: true},
+    created: { type: Number, default: Date.now() },
     saves: { type: Number, default: 0 },
     views: { type: [ObjectId], ref:models.user.name, default: [] },
 	// Relationships

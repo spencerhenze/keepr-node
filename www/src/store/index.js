@@ -55,17 +55,42 @@ var store = new vuex.Store({
                 commit('setResults', res.data)
             })
         },
-        addKeep({ commit, dispatch }, keep) {
-            api.post('keeps', keep)
+        AddKeep({ commit, dispatch }, keep) {
+            //make a copy of the keep that doesn't have the vault key on it. The model is not expecting that.
+            var purekeep = {
+                name: this.keepTitle,
+                description: this.keepDescription,
+                imgUrl: this.src,
+                tags: this.keepTags.split(","),
+            }
+            // send the model-friendly keep to the default POST route
+            api.post('keeps', purekeep)
                 .then(res => {
+                    debugger
                     console.log(res)
-                    if (!res.error) {
-                        console.log('Keep saved!')
-                        console.log(res)
-                        // check out the res and see if you want to do anything with it.
-                        dispatch("GetKeeps")
+                    if (res.error) {
+                        return console.log('something went wrong with your post keep route')
                     }
 
+                    console.log('Keep saved!')
+                    console.log(res)
+                    // look at this response object and see if you're referencing it right below.
+                    // add the id value to the original keep object now that you have it.
+                    keep.id = res.data._id
+                    // pull the vault key and value off of the original keep object and send it to the save keep route.
+                    dispatch('SaveKeep', keep)
+                    dispatch("GetKeeps")
+
+
+                })
+        },
+        SaveKeep({ commit, dispatch }, keep) {
+            api.put('vaults/' + keep.vault + '/keeps/' + keep.id)
+                .then(res => {
+                    console.log(keep.name + "successfully added to vault: " + keep.vault)
+                })
+                .catch(error => {
+                    console.log(error)
                 })
         }
 

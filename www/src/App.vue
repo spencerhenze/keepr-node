@@ -94,6 +94,7 @@
             <v-text-field label="Keep Title" v-model="keepTitle" required></v-text-field>
             <v-text-field label="Description" v-model="keepDescription" required></v-text-field>
             <v-text-field label="Tags (comma separated, no spaces)" v-model="keepTags"></v-text-field>
+            <v-switch label="Private Keep" v-model="private"></v-switch>
             <v-btn v-if="selectedVault && keepTitle && keepDescription" success dark @click="sendKeep">Send It!</v-btn>
             <v-btn v-else success dark @click="sendKeep" disabled>Send It!</v-btn>
 
@@ -122,6 +123,7 @@
         keepTags: null,
         src: '//res.cloudinary.com/keepr/image/upload/v1507065886/placeholder_uanfhh.jpg',
         selectedVault: null,
+        private: false
       }
     },
     computed: {
@@ -146,10 +148,11 @@
           description: this.keepDescription,
           imgUrl: this.src,
           tags: this.keepTags.split(","),
+          private: this.private,
           vault: this.selectedVault._id
         }
-        console.log(keep)
-        this.$store.dispatch('addKeep', keep)
+        console.log("logging from App.vue sendKeep() method:\n" + keep)
+        this.$store.dispatch('AddKeep', keep)
       }
     }
 
