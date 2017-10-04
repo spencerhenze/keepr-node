@@ -66,20 +66,12 @@
         <v-card-text>
           <!-- need to get the vault from the dropdown menu -->
           <v-form>
-            <v-menu offset-y>
-              <v-btn primary dark slot="activator">Choose Vault</v-btn>
-              <v-list>
-                <v-list-tile v-for="vault in vaults" :key="vault.title" @click="selectVault(vault)">
-                  <v-list-tile-title>{{vault.title}}</v-list-tile-title>
-                </v-list-tile>
-              </v-list>
-            </v-menu>
-            <h3 class="headline" style="margin-top:10px">Posting to: {{selectedVault.title}}</h3>
+            <v-select label="Choose Vault" v-model="selectedVault" :items="vaults" item-text="title" item-value="vault" dark required></v-select>
             <v-text-field label="Keep Title" v-model="keepTitle" required></v-text-field>
             <v-text-field label="Description" v-model="keepDescription" required></v-text-field>
             <v-text-field label="Tags (comma separated, no spaces)" v-model="keepTags"></v-text-field>
-            <v-btn v-if="vaultSelected" success dark @click="submit">Send It!</v-btn>
-            <v-btn v-else success dark @click="submit" disabled>Send It!</v-btn>
+            <v-btn v-if="selectedVault && keepTitle && keepDescription" success dark @click="sendKeep">Send It!</v-btn>
+            <v-btn v-else success dark @click="sendKeep" disabled>Send It!</v-btn>
 
           </v-form>
         </v-card-text>
@@ -101,12 +93,11 @@
         title: 'eepr',
         dialog: false,
         // addKeepWidth: setWidth(),
-        keepTitle: '',
-        keepDescription: '',
-        keepTags: '',
+        keepTitle: null,
+        keepDescription: null,
+        keepTags: null,
         src: '//res.cloudinary.com/keepr/image/upload/v1507065886/placeholder_uanfhh.jpg',
-        selectedVault: {},
-        vaultSelected: false
+        selectedVault: null,
       }
     },
     computed: {
@@ -123,17 +114,9 @@
         cloudinary.openUploadWidget({ cloud_name: 'keepr', upload_preset: 'zaloay8g' },
           (error, result) => {
             this.src = result[0].url
-
-            // build the keep item to send to the backend
-
           });
       },
-      selectVault(vault) {
-        this.selectedVault = vault;
-        this.vaultSelected = true;
-        console.log(this.selectedVault)
-      },
-      submit() {
+      sendKeep() {
         var keep = {
           name: this.keepTitle,
           description: this.keepDescription,
