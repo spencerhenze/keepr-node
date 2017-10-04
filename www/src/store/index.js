@@ -177,6 +177,7 @@ var store = new vuex.Store({
                     console.log(res)
                     if (res.data.error) {
                         console.log("no session found")
+                        commit('setLoggedIn', false)
                         return router.push('/')
                     }
                     commit('setUser', res.data.data)
