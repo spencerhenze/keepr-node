@@ -3,14 +3,36 @@
     <!-- render drawer only if logged in -->
     <v-navigation-drawer v-if="loggedIn" persistent v-model="drawer" enable-resize-watcher>
       <v-list>
-        <v-list-tile value="true" v-for="(item, i) in items" :key="i">
+        <!-- <router-link :to="{name:'Home'}"> -->
+        <v-list-tile class="sidebar-tile">
           <v-list-tile-action>
-            <v-icon light v-html="item.icon"></v-icon>
+            <v-icon class="sidebar-icon">explore</v-icon>
           </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"></v-list-tile-title>
+          <v-list-tile-content class="sidebar-text-parent">
+            <v-list-tile-title class="sidebar-text">explore</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <!-- </router-link> -->
+        <!-- <router-link :to="{name:'Home'}"> -->
+        <v-list-tile class="sidebar-tile">
+          <v-list-tile-action>
+            <v-icon class="sidebar-icon">fa-user</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content class="sidebar-text-parent">
+            <v-list-tile-title class="sidebar-text">profile</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <!-- </router-link> -->
+        <!-- <router-link :to="{name:'Home'}"> -->
+        <v-list-tile class="sidebar-tile">
+          <v-list-tile-action>
+            <v-icon class="sidebar-icon">fa-archive</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content class="sidebar-text-parent">
+            <v-list-tile-title class="sidebar-text">Vaults</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <!-- </router-link> -->
       </v-list>
     </v-navigation-drawer>
 
@@ -25,10 +47,12 @@
       <router-link v-if="!loggedIn" :to="{name: 'Login'}">
         <v-btn primary dark>Login</v-btn>
       </router-link>
-      <v-btn v-if="loggedIn" @click.stop="dialog=true">
+      <v-btn v-if="loggedIn" fab dark medium class="transparent" style="box-shadow:none" @click.stop="dialog=true">
         <v-icon>add_circle</v-icon>
       </v-btn>
-      <v-btn v-if="loggedIn" error dark>Logout</v-btn>
+      <v-btn v-if="loggedIn" fab dark small class="red" style="margin-right:15px">
+        <v-icon dark>fa-sign-out</v-icon>
+      </v-btn>
 
     </v-toolbar>
 
