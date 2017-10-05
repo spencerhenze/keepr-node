@@ -3,36 +3,56 @@
     <!-- render drawer only if logged in -->
     <v-navigation-drawer v-if="loggedIn" persistent v-model="drawer" enable-resize-watcher>
       <v-list>
-        <!-- <router-link :to="{name:'Home'}"> -->
-        <v-list-tile class="sidebar-tile">
-          <v-list-tile-action>
-            <v-icon class="sidebar-icon">explore</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content class="sidebar-text-parent">
-            <v-list-tile-title class="sidebar-text">explore</v-list-tile-title>
+        <router-link class="sidebar-header" :to="{ name: 'Profile' }">
+
+          <img src="//res.cloudinary.com/keepr/image/upload/v1507160891/IMG_5575_copy_1_q0nnby.jpg" class="img-circle img-responsive sidebar-profile-image">
+
+
+          <h5 class="sidebar-text" style="margin-right:10px">{{user.name}}</h5>
           </v-list-tile-content>
-        </v-list-tile>
-        <!-- </router-link> -->
-        <!-- <router-link :to="{name:'Home'}"> -->
-        <v-list-tile class="sidebar-tile">
-          <v-list-tile-action>
-            <v-icon class="sidebar-icon">fa-user</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content class="sidebar-text-parent">
-            <v-list-tile-title class="sidebar-text">profile</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <!-- </router-link> -->
-        <!-- <router-link :to="{name:'Home'}"> -->
-        <v-list-tile class="sidebar-tile">
-          <v-list-tile-action>
-            <v-icon class="sidebar-icon">fa-archive</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content class="sidebar-text-parent">
-            <v-list-tile-title class="sidebar-text">Vaults</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <!-- </router-link> -->
+        </router-link>
+
+        <router-link :to="{name:'Home'}">
+          <v-list-tile class="sidebar-tile">
+            <v-list-tile-action>
+              <v-icon class="sidebar-icon">explore</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content class="sidebar-text-parent">
+              <v-list-tile-title class="sidebar-text">explore</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </router-link>
+        <!-- <router-link :to="{name:'Profile'}">
+          <v-list-tile class="sidebar-tile">
+            <v-list-tile-action>
+              <v-icon class="sidebar-icon">fa-user</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content class="sidebar-text-parent">
+              <v-list-tile-title class="sidebar-text">profile</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </router-link> -->
+        <router-link :to="{name:'Vaults'}">
+          <v-list-tile class="sidebar-tile">
+            <v-list-tile-action>
+              <v-icon class="sidebar-icon">fa-archive</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content class="sidebar-text-parent">
+              <v-list-tile-title class="sidebar-text">Vaults</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </router-link>
+        <router-link :to="{name:'MyKeeps'}">
+          <v-list-tile class="sidebar-tile">
+            <v-list-tile-action>
+              <v-icon class="sidebar-icon">fingerprint</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content class="sidebar-text-parent">
+              <v-list-tile-title class="sidebar-text">My Keeps</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </router-link>
+
       </v-list>
     </v-navigation-drawer>
 
@@ -45,6 +65,13 @@
       <v-toolbar-title v-text="title" style="margin-left: -15px"></v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="!loggedIn" primary dark @click.stop="OpenLoginWindow">Login</v-btn>
+      <router-link v-if="loggedIn" :to="{ name: 'Profile'}">
+        <div id="user-identifier">
+          <p id="user-name-display">{{user.name}}</p>
+          <v-icon>fa-user</v-icon>
+        </div>
+
+      </router-link>
       <v-btn v-if="loggedIn" fab dark medium class="transparent" style="box-shadow:none" @click.stop="dialog=true">
         <v-icon>add_circle</v-icon>
       </v-btn>
@@ -150,6 +177,9 @@
       },
       loginWindow() {
         return this.$store.state.loginWindow;
+      },
+      user() {
+        return this.$store.state.user;
       }
     },
     methods: {
@@ -189,5 +219,33 @@
 </script>
 
 <style scoped>
+  a {
+    text-decoration: none;
+  }
 
+  #user-name-display {
+    margin-top: 18px;
+    margin-right: 10px;
+  }
+
+  #user-identifier {
+    color: white;
+    display: flex;
+  }
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .sidebar-profile-image {
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 50;
+  }
 </style>
