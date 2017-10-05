@@ -22,7 +22,7 @@ let defaultErrorHandler = (err, req, res, next) => {
 }
 
 //Default Urls 
-var whitelist = ['http://localhost:8081', 'http://portal.boisecodeworks.com', 'https://awesome-keepr.herokuapp.com'];
+var whitelist = ['http://localhost:8081', 'http://portal.boisecodeworks.com', 'https://awesome-keepr.herokuapp.com', 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'];
 var corsOptions = {
 	origin: function (origin, callback) {
 		var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
