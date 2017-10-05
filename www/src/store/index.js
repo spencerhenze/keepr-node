@@ -6,7 +6,7 @@ import router from '../router'
 
 
 var production = !window.location.host.includes('localhost')
-var baseUrl = production ? '/awesome-keepr.herokuapp.com/' : '//localhost:3000/';
+var baseUrl = production ? '//awesome-keepr.herokuapp.com/' : '//localhost:3000/';
 // selects env
 
 vue.use(vuex)
