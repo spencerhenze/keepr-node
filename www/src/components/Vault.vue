@@ -1,13 +1,18 @@
 <template>
     <div class="home">
+        <v-layout row>
+            <v-flex xs12 class="vault-title-block">
+                <h2>{{activeVault.name}}</h2>
+            </v-flex>
+        </v-layout>
+
         <v-container fluid grid-list-md class="transparent">
 
             <v-layout row wrap>
-                <h2>{{activeVault.name}}</h2>
 
 
                 <!-- load results -->
-                <v-flex v-bind="{ [`xs${card.flex}`]: true }" v-for="card in vaultKeeps" :key="card.title">
+                <v-flex v-bind="{ [`xs4`]: true }" v-for="card in vaultKeeps" :key="card.title">
 
                     <v-card>
                         <!-- picture & Title -->
@@ -117,9 +122,11 @@
                 return this.$store.state.activeVault;
             }
         },
+        beforeMount() {
+            this.$store.dispatch('clearActiveVault')
+        },
         mounted() {
             this.$store.dispatch('GetVault', this.$route.params.vaultId)
-            // this.$store.dispatch('GetVaultKeeps')
         }
     }
 
@@ -129,6 +136,11 @@
 <style scoped>
     .modal-image {
         height: 50vh !important;
+    }
+
+    .vault-title-block {
+        display: flex;
+        justify-content: center;
     }
 
     h1,

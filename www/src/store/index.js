@@ -232,6 +232,9 @@ var store = new vuex.Store({
                 })
 
         },
+        clearActiveVault({ commit, dispatch }) {
+            commit("setActiveVault", {})
+        },
 
         getAuth({ commit, dispatch }) {
             auth('authenticate')
