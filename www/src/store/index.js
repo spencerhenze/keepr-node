@@ -31,9 +31,9 @@ var store = new vuex.Store({
         vaults: [],
         loggedIn: false,
         results: [
-            { title: 'Boise Homes', imgUrl: '//res.cloudinary.com/dvh7zccln/image/upload/v1506560973/SHP_0282_e5rzfg.jpg', description: "Boise is the greatest place on earth to live. Californians have figured that out so we've built a bunch of homes. Check them out!", flex: 12, views: 32, saves: 5 },
-            { title: 'Mountain Therapy', imgUrl: '//res.cloudinary.com/dvh7zccln/image/upload/v1501022397/SHP_0604_x1szrl.jpg', description: "Sometimes you just have to escape to the mountains. Check out our hottest recommendations for places to get your zen on.", flex: 6, views: 10, saves: 10 },
-            { title: 'Sick Gnar', imgUrl: '//res.cloudinary.com/dvh7zccln/image/upload/v1500221424/SHP_1220_e3cjkd.jpg', description: "Just shred bro. Check out these monster waves on tiny lakes.", flex: 6, views: 100, saves: 45 }
+            { title: 'Boise Homes', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1506560973/SHP_0282_e5rzfg.jpg', description: "Boise is the greatest place on earth to live. Californians have figured that out so we've built a bunch of homes. Check them out!", flex: 12, views: 32, saves: 5 },
+            { title: 'Mountain Therapy', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1501022397/SHP_0604_x1szrl.jpg', description: "Sometimes you just have to escape to the mountains. Check out our hottest recommendations for places to get your zen on.", flex: 6, views: 10, saves: 10 },
+            { title: 'Sick Gnar', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1500221424/SHP_1220_e3cjkd.jpg', description: "Just shred bro. Check out these monster waves on tiny lakes.", flex: 6, views: 100, saves: 45 }
         ],
         loginWindow: false,
         loginError: false,
@@ -91,6 +91,7 @@ var store = new vuex.Store({
                     console.log("user created successfully")
                     commit("setLoggedIn", true)
                     dispatch("getAuth")
+                    dispatch("AddVault", { name: "My Keeps", description: "A home for all of your uploaded keeps" })
                 })
                 .catch(err => {
                     console.log("your post request to make a new user failed. Here is the error:\n" + err)
@@ -169,9 +170,12 @@ var store = new vuex.Store({
                     // look at this response object and see if you're referencing it right below.
                     // add the id value to the original keep object now that you have it.
                     keep.id = res.data.data._id
+                    keep.creatorId = res.data.data.creatorId
                     // pull the vault key and value off of the original keep object and send it to the save keep route.
                     dispatch('SaveKeep', keep)
+                    // dispatch("SaveToDevault", keep)
                     dispatch("GetKeeps")
+                    dispatch("GetVaults")
 
 
                 })
@@ -180,6 +184,21 @@ var store = new vuex.Store({
             api.put('vaults/' + keep.vault + '/keeps/' + keep.id + '/save')
                 .then(res => {
                     console.log(keep.name + "successfully added to vault: " + keep.vault)
+                    if (keep.creatorId == store.state.user._id.toString()) {
+                        dispatch("SaveToDevault", keep)
+                    }
+                    dispatch("GetVaults")
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        SaveToDevault({ commit, dispatch }, keep) {
+            // set the vault to the default "My Keeps" vault
+            keep.vault = store.state.vaults[0]._id
+            api.put('vaults/' + keep.vault + '/keeps/' + keep.id + '/save')
+                .then(res => {
+                    console.log(keep.name + "successfully added keep to the default vault")
                 })
                 .catch(error => {
                     console.log(error)

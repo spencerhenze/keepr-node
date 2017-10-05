@@ -207,6 +207,7 @@
         }
         console.log("logging from App.vue sendKeep() method:\n" + keep)
         this.$store.dispatch('AddKeep', keep)
+        this.dialog = false;
       },
       Logout() {
         this.$store.dispatch("Logout")
