@@ -8,7 +8,7 @@
     "start": "node index.js",
     "dev": "node index.js"
   },
-  "author": "Jake Overall <joverall22@gmail.com>",
+  "author": "Spencer Henze <spencerhenze@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "babel-cli": "^6.22.2",
