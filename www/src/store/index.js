@@ -6,7 +6,6 @@ import router from '../router'
 
 
 var production = !window.location.host.includes('localhost')
-// var ip = production ? '//deployment location' : '//localhost:5000'
 var baseUrl = production ? '/awesome-keepr.herokuapp.com/' : '//localhost:3000/';
 // selects env
 
@@ -32,9 +31,9 @@ var store = new vuex.Store({
         vaults: [],
         loggedIn: false,
         results: [
-            { title: 'Boise Homes', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1506560973/SHP_0282_e5rzfg.jpg', description: "Boise is the greatest place on earth to live. Californians have figured that out so we've built a bunch of homes. Check them out!", flex: 12, views: 32, saves: 5 },
-            { title: 'Mountain Therapy', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1501022397/SHP_0604_x1szrl.jpg', description: "Sometimes you just have to escape to the mountains. Check out our hottest recommendations for places to get your zen on.", flex: 6, views: 10, saves: 10 },
-            { title: 'Sick Gnar', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1500221424/SHP_1220_e3cjkd.jpg', description: "Just shred bro. Check out these monster waves on tiny lakes.", flex: 6, views: 100, saves: 45 }
+            // { title: 'Boise Homes', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1506560973/SHP_0282_e5rzfg.jpg', description: "Boise is the greatest place on earth to live. Californians have figured that out so we've built a bunch of homes. Check them out!", flex: 12, views: 32, saves: 5 },
+            // { title: 'Mountain Therapy', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1501022397/SHP_0604_x1szrl.jpg', description: "Sometimes you just have to escape to the mountains. Check out our hottest recommendations for places to get your zen on.", flex: 6, views: 10, saves: 10 },
+            // { title: 'Sick Gnar', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1500221424/SHP_1220_e3cjkd.jpg', description: "Just shred bro. Check out these monster waves on tiny lakes.", flex: 6, views: 100, saves: 45 }
         ],
         vaultKeeps: [],
         loginWindow: false,
