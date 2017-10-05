@@ -59,7 +59,6 @@ var store = new vuex.Store({
             store.vaults = vaults;
         },
         setResults(store, data) {
-            debugger
             // set the flex number for display. Every third one should take up 12. The rest 6
             var flexIndex = 3;
             data.forEach(c => {
@@ -142,16 +141,20 @@ var store = new vuex.Store({
         },
         GetKeeps({ commit, dispatch }) {
             api('keeps').then(res => {
-                commit('setResults', res.data)
+                console.log("get keeps response:")
+                console.log(res)
+                commit('setResults', res.data.data)
             })
         },
         AddKeep({ commit, dispatch }, keep) {
             //make a copy of the keep that doesn't have the vault key on it. The model is not expecting that.
             var purekeep = {
-                name: this.keepTitle,
-                description: this.keepDescription,
-                imgUrl: this.src,
-                tags: this.keepTags.split(","),
+                name: keep.name,
+                description: keep.description,
+                imgUrl: keep.imgUrl,
+                tags: keep.tags,
+                private: keep.private,
+                vault: keep.vault
             }
             // send the model-friendly keep to the default POST route
             api.post('keeps', purekeep)
@@ -165,7 +168,7 @@ var store = new vuex.Store({
                     console.log(res)
                     // look at this response object and see if you're referencing it right below.
                     // add the id value to the original keep object now that you have it.
-                    keep.id = res.data._id
+                    keep.id = res.data.data._id
                     // pull the vault key and value off of the original keep object and send it to the save keep route.
                     dispatch('SaveKeep', keep)
                     dispatch("GetKeeps")
@@ -174,7 +177,7 @@ var store = new vuex.Store({
                 })
         },
         SaveKeep({ commit, dispatch }, keep) {
-            api.put('vaults/' + keep.vault + '/keeps/' + keep.id)
+            api.put('vaults/' + keep.vault + '/keeps/' + keep.id + '/save')
                 .then(res => {
                     console.log(keep.name + "successfully added to vault: " + keep.vault)
                 })
@@ -195,6 +198,7 @@ var store = new vuex.Store({
                     commit('setUser', res.data.data)
                     commit('setLoggedIn', true)
                     dispatch("GetVaults")
+                    dispatch("GetKeeps")
                     router.push('/')
                 })
                 .catch(err => {

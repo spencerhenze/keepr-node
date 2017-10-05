@@ -115,7 +115,7 @@
         <v-card-text>
           <!-- need to get the vault from the dropdown menu -->
           <v-form>
-            <v-select label="Choose Vault" v-model="selectedVault" :items="vaults" item-text="title" item-value="vault" dark required></v-select>
+            <v-select label="Choose Vault" v-model="selectedVault" :items="vaults" item-text="name" item-value="vault" dark required></v-select>
             <v-text-field label="Keep Title" v-model="keepTitle" required></v-text-field>
             <v-text-field label="Description" v-model="keepDescription" required></v-text-field>
             <v-text-field label="Tags (comma separated, no spaces)" v-model="keepTags"></v-text-field>

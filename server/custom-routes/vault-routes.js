@@ -19,7 +19,7 @@ module.exports = {
                 .then(vault => {
                     vault.keeps.push(keepId)
                     vault.save()
-                    res.send({action, message:"Successfully added keep to vault: " + vault.name })
+                    res.send({ action, message: "Successfully added keep to vault: " + vault.name })
                 })
                 .catch(error => {
                     return next(handleResponse(action, null, error))

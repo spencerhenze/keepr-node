@@ -37,7 +37,7 @@
               <span class="white--text" v-text="card.description"></span>
             </v-card-text>
             <v-flex>
-              <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="card.views"></span>
+              <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="card.views.length"></span>
               <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="card.saves"></span>
             </v-flex>
           </v-card>
