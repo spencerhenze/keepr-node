@@ -21,7 +21,6 @@
         "express-session": "^1.15.0",
         "mongoose": "^4.8.1",
         "socket.io": "^1.7.3",
-        "vuedraggable": "^2.14.1",
         "axios": "^0.16.2",
         "jquery": "^3.2.1",
         "vue": "^2.4.2",
