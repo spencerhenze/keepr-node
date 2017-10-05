@@ -79,6 +79,9 @@
 
             }
         },
+        mounted() {
+            // this.$store.commit("setResults", [])
+        },
         methods: {
             sendVault() {
                 var vault = {

@@ -35,9 +35,11 @@ var store = new vuex.Store({
             { title: 'Mountain Therapy', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1501022397/SHP_0604_x1szrl.jpg', description: "Sometimes you just have to escape to the mountains. Check out our hottest recommendations for places to get your zen on.", flex: 6, views: 10, saves: 10 },
             { title: 'Sick Gnar', imgUrl: 'http://res.cloudinary.com/dvh7zccln/image/upload/v1500221424/SHP_1220_e3cjkd.jpg', description: "Just shred bro. Check out these monster waves on tiny lakes.", flex: 6, views: 100, saves: 45 }
         ],
+        vaultKeeps: [],
         loginWindow: false,
         loginError: false,
-        error: {}
+        error: {},
+        activeVault: {}
     },
     mutations: {
         setDefaultState(store) {
@@ -58,6 +60,9 @@ var store = new vuex.Store({
         setVaults(store, vaults) {
             store.vaults = vaults;
         },
+        setVaultKeeps(store, data) {
+            store.vaultKeeps = data;
+        },
         setResults(store, data) {
             // set the flex number for display. Every third one should take up 12. The rest 6
             var flexIndex = 3;
@@ -71,6 +76,12 @@ var store = new vuex.Store({
                 flexIndex++;
             })
             store.results = data;
+        },
+        clearVaultKeeps(store) {
+            store.vaultKeeps = [];
+        },
+        setActiveVault(store, vault) {
+            store.activeVault = vault;
         },
         handleError(state, err) {
             state.error = err
@@ -142,8 +153,6 @@ var store = new vuex.Store({
         },
         GetKeeps({ commit, dispatch }) {
             api('keeps').then(res => {
-                console.log("get keeps response:")
-                console.log(res)
                 commit('setResults', res.data.data)
             })
         },
@@ -204,6 +213,26 @@ var store = new vuex.Store({
                     console.log(error)
                 })
         },
+        GetVault({ commit, dispatch }, id) {
+            api('vaults/' + id)
+                .then(res => {
+                    commit("setActiveVault", res.data.data);
+                    dispatch("GetVaultKeeps", res.data.data);
+                })
+        },
+        GetVaultKeeps({ commit, dispatch }, vault) {
+            let keeps = vault.keeps
+            api.post('vaultkeeps', keeps)
+                .then(res => {
+                    console.log(res.data.keeps)
+                    commit("setVaultKeeps", res.data.keeps)
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
+
+        },
+
         getAuth({ commit, dispatch }) {
             auth('authenticate')
                 .then(res => {
@@ -225,32 +254,6 @@ var store = new vuex.Store({
                     router.push('/')
                 })
         }
-
-        // CreateAccountExample() {
-        //     api.post('account', { email: "j@j.com", password: 'Testing123!' }).then(GetDataExample)
-        // },
-
-        // loginAndGetDataExample() {
-        //     api.post('account/login', { email: "joe@blow.com", password: 'Password123!' }).then(GetDataExample)
-        // },
-
-        // logout() {
-        //     api.delete('account/logout')
-        // },
-
-        // GetDataExample() {
-        //     api('values').then(d => {
-        //         console.log("Values Controller Data:", d)
-        //     }).catch(err => {
-        //         console.error(err)
-        //     })
-        // },
-
-        // getAuth() {
-        //     api('account').then(res => {
-        //         console.log("Auth Response", res)
-        //     })
-        // },
     }
 })
 
