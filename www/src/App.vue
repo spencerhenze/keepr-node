@@ -5,7 +5,7 @@
       <v-list>
         <router-link class="sidebar-header" :to="{ name: 'Profile' }">
 
-          <img src="//res.cloudinary.com/keepr/image/upload/v1507160891/IMG_5575_copy_1_q0nnby.jpg" class="img-circle img-responsive sidebar-profile-image">
+          <img :src="user.profileImg" class="img-circle img-responsive sidebar-profile-image">
 
 
           <h5 class="sidebar-text" style="margin-right:10px">{{user.name}}</h5>

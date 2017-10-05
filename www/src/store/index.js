@@ -87,10 +87,11 @@ var store = new vuex.Store({
         },
 
         Register({ commit, dispatch }, user) {
-            $.post(ip + "register", user)
+            auth.post("register", user)
                 .then(res => {
                     console.log("user created successfully")
                     commit("setLoggedIn", true)
+                    dispatch("getAuth")
                 })
                 .catch(err => {
                     console.log("your post request to make a new user failed. Here is the error:\n" + err)

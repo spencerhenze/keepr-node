@@ -25,12 +25,22 @@
         <!-- Register form -->
         <v-card v-else-if="registerForm">
             <div class="loginModalHeader">
-                <v-card-title class="headline">Log In</v-card-title>
+                <v-card-title class="headline">Register</v-card-title>
                 <v-spacer></v-spacer>
                 <v-btn fab medium class="transparent" style="box-shadow:none" @click="CloseLoginWindow">
                     <v-icon medium>close</v-icon>
                 </v-btn>
             </div>
+
+            <a @click.prevent="uploadPic">
+                <v-card-media class="modal-image" :src="profileImg" height="300">
+                    <v-container fill-height fluid>
+                        <v-layout fill-height>
+                        </v-layout>
+                    </v-container>
+                </v-card-media>
+            </a>
+
             <v-card-text>
 
                 <v-form>
@@ -87,6 +97,7 @@
                 password: null,
                 confirmPassword: null,
                 successMessage: false,
+                profileImg: '//res.cloudinary.com/keepr/image/upload/v1507162512/GenericUser_jvtsds.png'
             }
         },
         props: [
@@ -110,12 +121,20 @@
 
                     })
             },
+            uploadPic() {
+                cloudinary.openUploadWidget({ cloud_name: 'keepr', upload_preset: 'zaloay8g' },
+                    (error, result) => {
+                        this.profileImg = result[0].url
+                    });
+            },
+
             RegisterUser() {
                 if (this.password == this.confirmPassword) {
                     var newUser = {
                         name: this.name,
                         email: this.email,
-                        password: this.password
+                        password: this.password,
+                        profileImg: this.profileImg
                     }
                     this.$store.dispatch('Register', newUser)
                     this.successMessage = true;
