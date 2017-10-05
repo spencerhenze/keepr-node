@@ -9,50 +9,35 @@
             <h4>No vaults yet. Add one now</h4>
         </div>
 
-
-        <v-flex v-bind="{ [`xs${card.flex}`]: true }" v-for="card in vaults" :key="card.title">
-
-            <v-card>
-                <!-- picture & Title -->
-                <v-card-media :src="card.imgUrl" height="200px" @click.stop="expandKeep(card)">
-                    <v-container fill-height fluid>
-                        <v-layout fill-height>
-                            <v-flex xs12 align-end flexbox>
-                                <span class="headline white--text" v-text="card.title"></span>
-                            </v-flex>
-                        </v-layout>
-                    </v-container>
-                </v-card-media>
-
-                <!-- button row -->
-                <v-card-actions class="white">
-                    <v-spacer></v-spacer>
-                    <v-btn icon>
-                        <v-icon class="grey--text">favorite</v-icon>
-                    </v-btn>
-                    <v-btn icon>
-                        <v-icon class="grey--text">bookmark</v-icon>
-                    </v-btn>
-                    <v-btn icon>
-                        <v-icon class="grey--text">share</v-icon>
-                    </v-btn>
-                </v-card-actions>
-
-                <!-- description and counter displays -->
-                <v-card-text>
-                    <span class="white--text" v-text="card.description"></span>
-                </v-card-text>
-                <v-flex>
-                    <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="card.views"></span>
-                    <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="card.saves"></span>
+        <v-container fluid grid-list-md style="min-height: 0;" class="transparent">
+            <v-layout row wrap>
+                <!-- repeating content (vaults) -->
+                <v-flex v-bind="{ [`xs12`]: true }" v-for="card in vaults" :key="card.title">
+                    <router-link :to="'/vaults/' + card._id">
+                        <v-card class="white--text">
+                            <v-container fluid grid-list-md>
+                                <v-layout row>
+                                    <v-flex xs2>
+                                        <v-card-media src="//res.cloudinary.com/keepr/image/upload/v1507214035/design-vault_rgrq5i.png" height="125px" contain></v-card-media>
+                                    </v-flex>
+                                    <v-flex xs7 class="vault-text">
+                                        <div>
+                                            <div class="headline">{{card.name}}</div>
+                                            <div>{{card.description}}</div>
+                                        </div>
+                                    </v-flex>
+                                </v-layout>
+                            </v-container>
+                        </v-card>
+                    </router-link>
                 </v-flex>
-            </v-card>
-
-        </v-flex>
-
+                <!-- end repeating content (vaults) -->
+            </v-layout>
+        </v-container>
         <!-- add a vault modal -->
         <v-dialog v-model="vaultForm" lazy absolute width="50%">
             <v-card>
+                <!-- for adding a custom image for your vault -->
                 <!-- <a @click.prevent="openCloud">
                     <v-card-media class="modal-image" :src="src" height="300">
                         <v-container fill-height fluid>
@@ -120,5 +105,34 @@
     .announcement {
         display: flex;
         justify-content: center;
+    }
+
+    h1,
+    h2 {
+        font-weight: normal;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        display: inline-block;
+        margin: 0 10px;
+    }
+
+    a {
+        color: #42b983;
+    }
+
+    .bottom-icons {
+        margin-left: 15px;
+        margin-bottom: 10px;
+    }
+
+    .vault-text {
+        display: flex;
+        align-items: center;
     }
 </style>

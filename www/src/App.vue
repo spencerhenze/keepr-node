@@ -208,6 +208,12 @@
         console.log("logging from App.vue sendKeep() method:\n" + keep)
         this.$store.dispatch('AddKeep', keep)
         this.dialog = false;
+        this.keepTitle = null;
+        this.keepDescription = null;
+        this.src = '//res.cloudinary.com/keepr/image/upload/v1507065886/placeholder_uanfhh.jpg';
+        this.keepTags = null;
+        this.private = false;
+        this.selectedVault = null;
       },
       Logout() {
         this.$store.dispatch("Logout")

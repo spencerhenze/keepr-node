@@ -122,7 +122,7 @@
                     })
             },
             uploadPic() {
-                cloudinary.openUploadWidget({ cloud_name: 'keepr', upload_preset: 'zaloay8g' },
+                cloudinary.openUploadWidget({ cloud_name: 'keepr', upload_preset: 'l97fez81' },
                     (error, result) => {
                         this.profileImg = result[0].url
                     });
