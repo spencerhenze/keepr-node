@@ -8,6 +8,7 @@ import router from '../router'
 var production = !window.location.host.includes('localhost')
 // var ip = production ? '//deployment location' : '//localhost:5000'
 var baseUrl = production ? '/awesome-keepr.herokuapp.com/' : '//localhost:3000/';
+// selects env
 
 vue.use(vuex)
 
