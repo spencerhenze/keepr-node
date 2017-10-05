@@ -128,6 +128,18 @@ var store = new vuex.Store({
                     commit('setVaults', res.data.data)
                 })
         },
+        AddVault({ commit, dispatch }, vault) {
+            api.post('vaults', vault)
+                .then(res => {
+                    console.log("AddVault post request complete with the following response:")
+                    console.log(res)
+                    if (res.error) {
+                        return console.log("something went wrong with your post vault route")
+                    }
+                    console.log("vault added successfully")
+                    dispatch("GetVaults")
+                })
+        },
         GetKeeps({ commit, dispatch }) {
             api('keeps').then(res => {
                 commit('setResults', res.data)
@@ -144,7 +156,6 @@ var store = new vuex.Store({
             // send the model-friendly keep to the default POST route
             api.post('keeps', purekeep)
                 .then(res => {
-                    debugger
                     console.log(res)
                     if (res.error) {
                         return console.log('something went wrong with your post keep route')
@@ -183,6 +194,7 @@ var store = new vuex.Store({
                     }
                     commit('setUser', res.data.data)
                     commit('setLoggedIn', true)
+                    dispatch("GetVaults")
                     router.push('/')
                 })
                 .catch(err => {

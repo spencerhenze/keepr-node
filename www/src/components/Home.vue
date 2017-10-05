@@ -124,6 +124,7 @@
   .modal-image {
     height: 50vh !important;
   }
+
   h1,
   h2 {
     font-weight: normal;
@@ -142,6 +143,7 @@
   a {
     color: #42b983;
   }
+
   .bottom-icons {
     margin-left: 15px;
     margin-bottom: 10px;
