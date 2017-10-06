@@ -1,6 +1,9 @@
 <template>
   <div class="home">
     <v-container fluid grid-list-md class="transparent">
+
+
+
       <v-layout row wrap>
 
         <!-- load results -->
@@ -112,7 +115,7 @@
       }
     },
     mounted() {
-      // this.$store.dispatch('GetKeeps')
+      this.$store.dispatch('GetKeeps')
       this.$store.dispatch('getAuth')
     }
   }

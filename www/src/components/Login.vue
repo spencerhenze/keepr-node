@@ -71,7 +71,9 @@
 
                 <v-form>
                     <v-text-field label="Email" v-model="email" required></v-text-field>
-                    <v-text-field label="Password" v-model="password" required></v-text-field>
+                    <v-text-field name="login-password" hint="At least 8 characters" min="8" :append-icon="logPassHide ? 'visibility_off' : 'visibility'"
+                        :append-icon-cb="() => (logPassHide = !logPassHide)" :type="logPassHide ? 'password' : 'text'" counter
+                        label="Password" v-model="password" required></v-text-field>
                     <v-btn v-if="email && password" success dark @click="Login">Send It!</v-btn>
                     <v-btn v-else success dark @click.stop="Login" disabled>Send It!</v-btn>
                     <!-- go to register form -->
@@ -95,6 +97,7 @@
                 name: null,
                 email: null,
                 password: null,
+                logPassHide: true,
                 confirmPassword: null,
                 successMessage: false,
                 profileImg: '//res.cloudinary.com/keepr/image/upload/v1507162512/GenericUser_jvtsds.png'
