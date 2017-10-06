@@ -1,4 +1,5 @@
 let Vaults = require('../models/vault')
+let Keeps = require('../models/keep')
 let User = require('../models/user')
 let mongoose = require('mongoose')
 
@@ -32,6 +33,42 @@ module.exports = {
                 })
         }
     },
+    deleteUserKeeps: {
+        path: '/removekeeps',
+        reqType: 'delete',
+        method(req, res, next) {
+            let action = 'find keeps from vault array'
+            Keeps.remove({ creatorId: req.session.uid }).exec()
+                .then(res => {
+                    Keeps.save()
+                    res.send({ action, res })
+                })
+                .catch(error => {
+                    // return next(handleResponse(action, null, error))
+                    return console.log(error.message)
+                })
+        }
+
+    },
+
+    deleteUserVaults: {
+        path: '/removevaults',
+        reqType: 'delete',
+        method(req, res, next) {
+            let action = 'find keeps from vault array'
+            Vaults.remove({ creatorId: req.session.uid }).exec()
+                .then(res => {
+                    Keeps.save()
+                    res.send({ action, res })
+                })
+                .catch(error => {
+                    // return next(handleResponse(action, null, error))
+                    return console.log(error.message)
+                })
+        }
+
+    }
+
 }
 
 function handleResponse(action, data, error) {

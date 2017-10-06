@@ -39,11 +39,23 @@ var store = new vuex.Store({
         activeVault: {},
         activeKeep: { views: [] },
         saveKeepSuccess: false,
-        accountDeleted: false
     },
     mutations: {
         setDefaultState(store) {
-            //clear everything (called on logout)
+            store.user = {};
+            store.userKeeps = []
+            store.vaults = []
+            store.loggedIn = false
+            store.results = []
+            store.vaultKeeps = []
+            store.loginWindow = false
+            store.registerForm = false
+            store.loginError = false
+            store.error = {}
+            store.activeVault = {}
+            store.activeKeep = { views: [] }
+            store.saveKeepSuccess = false
+
         },
         SetLoginWindow(store, value) {
             store.loginWindow = value;
@@ -98,9 +110,6 @@ var store = new vuex.Store({
         SetSaveKeepSuccess(state, value) {
             state.saveKeepSuccess = value;
         },
-        SetAccountDeleted(store, value) {
-            state.accountDeleted = value;
-        }
 
     },
     actions: {
@@ -173,7 +182,14 @@ var store = new vuex.Store({
         GetKeeps({ commit, dispatch }) {
             commit("setResults", [])
             api('keeps').then(res => {
-                commit('setResults', res.data.data)
+                let allKeeps = res.data.data
+                let filteredKeeps = []
+                allKeeps.forEach(keep => {
+                    if (keep.private == false) {
+                        filteredKeeps.push(keep)
+                    }
+                })
+                commit('setResults', filteredKeeps)
             })
         },
         GetUserKeeps({ commit, dispatch }) {
@@ -335,13 +351,35 @@ var store = new vuex.Store({
                     router.push('/')
                 })
         },
+        DeleteUserKeeps({ commit, dispatch }) {
+            api.delete('removekeeps')
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
+        },
+        DeleteUserVaults({ commit, dispatch }) {
+            api.delete('removevaults')
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
+
+        },
         DeleteAccount({ commit, dispatch }) {
-            auth('deleteaccount')
+            dispatch("DeleteUserKeeps")
+            dispatch("DeleteUserVaults")
+            auth.delete('deleteaccount')
                 .then(res => {
                     if (res.error) {
                         console.log('something went wrong')
                     }
-                    commit('SetAccountDeleted', true)
+                    commit('setDefaultState')
+                    dispatch('getAuth')
                 })
         }
     }

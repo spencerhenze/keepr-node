@@ -1,6 +1,47 @@
 <template>
     <div class="profile">
-        This is the profile page
+        <v-layout row>
+            <v-flex xs12 class="flex-and-center">
+                <h3>Profile</h3>
+            </v-flex>
+        </v-layout>
+        <v-layout row>
+            <v-flex xs12 sm4 md3 class="flex-and-center">
+                <img :src="user.profileImg" class="img-circle img-responsive profile-image" alt="profile img">
+            </v-flex>
+            <v-flex xs12 sm8 md9>
+                <h5 class="sidebar-text" style="margin-right:10px">{{user.name}}</h5>
+                <p>Email: {{user.email}}</p>
+            </v-flex>
+        </v-layout>
+        <v-layout row>
+            <v-flex xs12 class="flex-and-center">
+                <router-link :to="{ name: 'MyKeeps'}">
+                    <v-btn primary dark>Manage My Keeps</v-btn>
+                </router-link>
+
+                <v-btn error dark @click.stop="areYouSure=true">Delete My Account</v-btn>
+            </v-flex>
+        </v-layout>
+
+
+        <!-- are you sure modal -->
+        <v-dialog v-model="areYouSure" lazy absolute width="50%">
+
+            <v-card>
+                <v-card-title class="headline">Are you sure?</v-card-title>
+                <v-card-text>
+
+                    <v-icon medium>error_outline</v-icon>
+                    <p>We're sorry to see you go. Click Delete to permanently delete your account and all uploaded keeps forever.
+                    </p>
+                    <v-btn error dark @click="DeleteAccount">Delete</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+
+
+
     </div>
 </template>
 
@@ -11,11 +52,22 @@
             return {
                 activeKeep: {},
                 msg: 'Welcome to Your Vue.js App',
-                dialog: false
+                dialog: false,
+                areYouSure: false
             }
         },
         methods: {
-
+            DeleteAccount() {
+                this.$store.dispatch("DeleteAccount");
+                this.areYouSure = false;
+                this.dialog = false;
+                this.$store.dispatch("getAuth")
+            }
+        },
+        computed: {
+            user() {
+                return this.$store.state.user;
+            }
         }
 
     }
@@ -23,5 +75,18 @@
 </script>
 
 <style scoped>
+    .profile-image {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 50;
+    }
 
+    .flex-and-center {
+        display: flex;
+        justify-content: center;
+    }
+
+    .flex-column {
+        flex-direction: column;
+    }
 </style>

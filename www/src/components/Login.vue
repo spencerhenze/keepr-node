@@ -46,8 +46,12 @@
                 <v-form>
                     <v-text-field label="Name" v-model="name" required></v-text-field>
                     <v-text-field label="Email" v-model="email" required></v-text-field>
-                    <v-text-field label="Password" v-model="password" required></v-text-field>
-                    <v-text-field label="Confirm Password" v-model="confirmPassword" required></v-text-field>
+                    <v-text-field name="login-password" hint="At least 8 characters" min="8" :append-icon="logPassHide ? 'visibility_off' : 'visibility'"
+                        :append-icon-cb="() => (logPassHide = !logPassHide)" :type="logPassHide ? 'password' : 'text'" counter
+                        label="Password" v-model="password" required></v-text-field>
+                    <v-text-field name="login-password" hint="At least 8 characters" min="8" :append-icon="logPassHide ? 'visibility_off' : 'visibility'"
+                        :append-icon-cb="() => (logPassHide = !logPassHide)" :type="logPassHide ? 'password' : 'text'" counter
+                        label="Confirm Password" v-model="confirmPassword" required></v-text-field>
                     <p v-if="confirmPassword && password!=confirmPassword" class="red">Passwords don't match</p>
                     <v-btn v-if="name && email && password && password==confirmPassword" success dark @click.stop="RegisterUser">Submit</v-btn>
                     <v-btn v-else success dark disabled>Submit</v-btn>
