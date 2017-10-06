@@ -101,7 +101,7 @@
     </v-footer>
 
     <!-- add keep modal -->
-    <v-dialog v-model="dialog" lazy absolute width="50%">
+    <v-dialog v-model="dialog" lazy absolute :width="viewWidth">
       <v-card>
         <a @click.prevent="openCloud">
           <v-card-media class="modal-image" :src="src" height="300">

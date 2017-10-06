@@ -54,7 +54,7 @@
                 <!-- end load results -->
 
                 <!-- Modal (expand keep) -->
-                <v-dialog v-model="dialog" lazy absolute width="80%">
+                <v-dialog v-model="dialog" lazy absolute :width="viewWidth">
                     <v-card>
                         <!-- picture & Title -->
                         <v-card-media class="modal-image" :src="activeKeep.imgUrl">
@@ -99,10 +99,30 @@
 </template>
 
 <script>
+    function CalculateModalW() {
+        var vw = Math.max(document.documentElement.clientWidth, window.innerWidth)
+        if (vw <= 600) {
+            return "90%"
+        }
+        else if (600 < vw && vw <= 768) {
+            var width = (-45 / 302) * vw + (25140 / 151)
+            return width.toString() + "%";
+        }
+        else if (768 < vw && vw <= 1264) {
+            var width = (-35 / 302) * vw + (25140 / 151)
+            return width.toString() + "%";
+        }
+        else if (vw > 1264) {
+            return "25%"
+        }
+    }
+
+
     export default {
         name: 'home',
         data() {
             return {
+                viewWidth: CalculateModalW(),
                 activeKeep: {},
                 msg: 'Welcome to Your Vue.js App',
                 dialog: false

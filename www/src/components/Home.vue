@@ -49,7 +49,7 @@
         <!-- end load results -->
 
         <!-- Modal (expanded view)-->
-        <v-dialog v-model="dialog" lazy absolute width="80%">
+        <v-dialog v-model="dialog" lazy absolute :width="viewWidth">
           <v-card>
             <!-- picture & Title -->
             <v-card-media class="modal-image" :src="activeKeep.imgUrl">
@@ -88,7 +88,7 @@
         </v-dialog>
 
         <!-- save keep modal -->
-        <v-dialog v-model="showSaveMenu" lazy absolute width="50%">
+        <v-dialog v-model="showSaveMenu" lazy absolute :width="viewWidth">
           <v-card>
             <v-card-media class="modal-image" :src="activeKeep.imgUrl" height="300">
               <v-container fill-height fluid>
@@ -113,7 +113,7 @@
           </v-card>
         </v-dialog>
 
-        <v-dialog v-model="saveKeepSuccess" lazy absolute persistent width="50%">
+        <v-dialog v-model="saveKeepSuccess" lazy absolute persistent :width="viewWidth">
           <v-card>
             <v-card-title class="headline">Success</v-card-title>
             <v-card-text>
@@ -131,11 +131,30 @@
 </template>
 
 <script>
+  function CalculateModalW() {
+    var vw = Math.max(document.documentElement.clientWidth, window.innerWidth)
+    if (vw <= 600) {
+      return "90%"
+    }
+    else if (600 < vw && vw <= 768) {
+      var width = (-45 / 302) * vw + (25140 / 151)
+      return width.toString() + "%";
+    }
+    else if (768 < vw && vw <= 1264) {
+      var width = (-35 / 302) * vw + (25140 / 151)
+      return width.toString() + "%";
+    }
+    else if (vw > 1264) {
+      return "25%"
+    }
+  }
+
+
   export default {
     name: 'home',
     data() {
       return {
-        msg: 'Welcome to Your Vue.js App',
+        viewWidth: CalculateModalW(),
         dialog: false,
         showSaveMenu: false,
         selectedVault: null
