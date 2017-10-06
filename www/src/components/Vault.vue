@@ -12,7 +12,7 @@
 
 
                 <!-- load results -->
-                <v-flex v-bind="{ [`xs4`]: true }" v-for="card in vaultKeeps" :key="card.title">
+                <v-flex xs12 sm4 v-for="card in vaultKeeps" :key="card.title">
 
                     <v-card>
                         <!-- picture & Title -->
@@ -28,13 +28,16 @@
 
                         <!-- button row -->
                         <v-card-actions class="white">
+                            <v-btn icon @click="RemoveKeep(card)">
+                                <v-icon class="grey--text remove-icon">fa-trash</v-icon>
+                            </v-btn>
                             <v-spacer></v-spacer>
-                            <v-btn icon>
+                            <!-- <v-btn icon>
                                 <v-icon class="grey--text">favorite</v-icon>
-                            </v-btn>
-                            <v-btn icon>
+                            </v-btn> -->
+                            <!-- <v-btn icon>
                                 <v-icon class="grey--text">bookmark</v-icon>
-                            </v-btn>
+                            </v-btn> -->
                             <v-btn icon>
                                 <v-icon class="grey--text">share</v-icon>
                             </v-btn>
@@ -44,9 +47,9 @@
                         <v-card-text>
                             <span class="white--text" v-text="card.description"></span>
                         </v-card-text>
-                        <v-flex>
-                            <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="card.views.length"></span>
-                            <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="card.saves"></span>
+                        <v-flex class="bottom-icon-container">
+                            <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text counts" v-text="card.views.length"></span>
+                            <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text counts" v-text="card.saves"></span>
                         </v-flex>
                     </v-card>
 
@@ -69,13 +72,11 @@
 
                         <!-- button row -->
                         <v-card-actions class="white">
+                            <v-btn icon @click="RemoveKeep(activeKeep)">
+                                <v-icon class="grey--text remove-icon">fa-trash</v-icon>
+                            </v-btn>
+
                             <v-spacer></v-spacer>
-                            <v-btn icon>
-                                <v-icon class="grey--text">favorite</v-icon>
-                            </v-btn>
-                            <v-btn icon>
-                                <v-icon class="grey--text">bookmark</v-icon>
-                            </v-btn>
                             <v-btn icon>
                                 <v-icon class="grey--text">share</v-icon>
                             </v-btn>
@@ -85,9 +86,9 @@
                         <v-card-text>
                             <span class="white--text" v-text="activeKeep.description"></span>
                         </v-card-text>
-                        <v-flex>
-                            <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="activeKeep.views"></span>
-                            <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="activeKeep.saves"></span>
+                        <v-flex class="bottom-icon-container">
+                            <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text counts" v-text="activeKeep.views.length"></span>
+                            <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text counts" v-text="activeKeep.saves"></span>
                         </v-flex>
                     </v-card>
                 </v-dialog>
@@ -123,7 +124,7 @@
         data() {
             return {
                 viewWidth: CalculateModalW(),
-                activeKeep: {},
+                activeKeep: { views: [] },
                 msg: 'Welcome to Your Vue.js App',
                 dialog: false
             }
@@ -132,6 +133,10 @@
             expandKeep(keep) {
                 this.activeKeep = keep;
                 this.dialog = true;
+            },
+            RemoveKeep(keep) {
+                this.$store.dispatch("RemoveVaultKeep", keep._id)
+                this.dialog = false;
             }
         },
         computed: {
@@ -140,7 +145,10 @@
             },
             activeVault() {
                 return this.$store.state.activeVault;
-            }
+            },
+            loggedIn() {
+                return this.$store.state.loggedIn;
+            },
         },
         beforeMount() {
             this.$store.dispatch('clearActiveVault')
@@ -185,5 +193,17 @@
     .bottom-icons {
         margin-left: 15px;
         margin-bottom: 10px;
+    }
+
+    .counts {
+        margin-left: .4rem;
+    }
+
+    .remove-icon {
+        align-self: flex-end;
+    }
+
+    .bottom-icon-container {
+        display: flex;
     }
 </style>

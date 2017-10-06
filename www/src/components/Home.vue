@@ -24,12 +24,6 @@
             <!-- button row -->
             <v-card-actions class="white">
               <v-spacer></v-spacer>
-              <!-- <v-btn v-if="loggedIn" icon>
-                <v-icon class="grey--text">favorite</v-icon>
-              </v-btn>
-              <v-btn v-if="loggedIn" icon>
-                <v-icon class="grey--text">bookmark</v-icon>
-              </v-btn> -->
               <v-btn icon>
                 <v-icon class="grey--text">share</v-icon>
               </v-btn>

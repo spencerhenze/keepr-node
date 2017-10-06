@@ -22,16 +22,6 @@
             </v-list-tile-content>
           </v-list-tile>
         </router-link>
-        <!-- <router-link :to="{name:'Profile'}">
-          <v-list-tile class="sidebar-tile">
-            <v-list-tile-action>
-              <v-icon class="sidebar-icon">fa-user</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content class="sidebar-text-parent">
-              <v-list-tile-title class="sidebar-text">profile</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </router-link> -->
         <router-link :to="{name:'Vaults'}">
           <v-list-tile class="sidebar-tile">
             <v-list-tile-action>
@@ -68,15 +58,15 @@
       <v-btn v-if="!loggedIn" fab dark medium class="transparent" style="box-shadow:none; margin-right:1.5rem;" @click.stop="OpenLoginWindow">
         <v-icon>fa-sign-in</v-icon>
       </v-btn>
-      <router-link v-if="loggedIn" :to="{ name: 'Profile'}">
+      <router-link v-if="loggedIn && cWidth>=518" :to="{ name: 'Profile'}">
         <div id="user-identifier">
           <p id="user-name-display">{{user.name}}</p>
-          <v-icon>fa-user</v-icon>
+          <img :src="user.profileImg" class="img-circle img-responsive top-profile-image">
         </div>
 
       </router-link>
       <v-btn v-if="loggedIn" fab dark medium class="transparent" style="box-shadow:none" @click.stop="dialog=true">
-        <v-icon>add_circle</v-icon>
+        <v-icon x-large>add_circle</v-icon>
       </v-btn>
       <v-btn v-if="loggedIn" fab dark small class="red" style="margin-right:15px" @click="Logout">
         <v-icon dark>fa-sign-out</v-icon>
@@ -159,10 +149,16 @@
       return "25%"
     }
   }
+
+  function GetClientWidth() {
+    return Math.max(document.documentElement.clientWidth, window.innerWidth)
+  }
+
   export default {
     data() {
       return {
         viewWidth: CalculateModalW(),
+        cWidth: GetClientWidth(),
         drawer: false,
         items: [
           { icon: 'bubble_chart', title: 'Inspire' }
@@ -261,8 +257,10 @@
   }
 
   #user-identifier {
+    align-items: center;
     color: white;
     display: flex;
+    margin-right: .4rem;
   }
 
   .sidebar-header {
@@ -279,5 +277,11 @@
     max-width: 80px;
     max-height: 80px;
     border-radius: 50;
+  }
+
+  .top-profile-image {
+    max-width: 40px;
+    max-height: 40px;
+    /* border-radius: 50; */
   }
 </style>

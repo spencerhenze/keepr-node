@@ -33,7 +33,12 @@ module.exports = {
                         console.log("keep is unique")
                         vault.keeps.push(keepId)
                         vault.save()
-                        res.send({ action, message: "Successfully added keep to vault: " + vault.name })
+                        Keeps.findOne({ _id: keepId })
+                            .then(keep => {
+                                keep.saves++
+                                keep.save()
+                                res.send({ action, message: "Successfully added keep to vault: " + vault.name })
+                            })
                     }
                 })
                 .catch(error => {
@@ -60,5 +65,23 @@ module.exports = {
         }
     },
 
-
+    RemoveVaultKeep: {
+        path: '/vaults/:vaultId/keeps/:keepId/remove',
+        reqType: 'delete',
+        method(req, res, next) {
+            let vaultId = req.params.vaultId;
+            let keepId = req.params.keepId;
+            Vaults.findOne({ _id: vaultId })
+                .then(vault => {
+                    let r = vault.keeps.indexOf(keepId);
+                    vault.keeps.splice(r, 1);
+                    vault.save()
+                        .then((vault) => {
+                            console.log("keep: " + keepId + " removed. Here is the updated array")
+                            console.log(vault.keeps)
+                            res.send({ message: 'keep successfully removed from vault' })
+                        })
+                })
+        }
+    }
 }

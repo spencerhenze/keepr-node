@@ -13,7 +13,7 @@ vue.use(vuex)
 
 let api = axios.create({
     baseURL: baseUrl + 'api/',
-    timeout: 10000,
+    timeout: 50000,
     withCredentials: true
 })
 
@@ -214,6 +214,12 @@ var store = new vuex.Store({
                 commit('setResults', filteredKeeps)
             })
         },
+        GetKeep({ commit, dispatch }, keepId) {
+            api('keeps/' + keepId)
+                .then(res => {
+                    commit('setActiveKeep', res.data.data)
+                })
+        },
         GetUserKeeps({ commit, dispatch }) {
             commit("setUserKeeps", [])
             api('my-keeps')
@@ -307,7 +313,6 @@ var store = new vuex.Store({
         SaveActiveKeep({ commit, dispatch }, vaultId) {
             api.put('vaults/' + vaultId + '/keeps/' + store.state.activeKeep._id + '/save')
                 .then(res => {
-                    console.log(keep.name + "successfully added to vault: " + keep.vault)
                     commit("SetSaveKeepSuccess", true);
                     dispatch("GetVaults")
                 })
@@ -344,6 +349,15 @@ var store = new vuex.Store({
                     console.log(err.message)
                 })
 
+        },
+        RemoveVaultKeep({ commit, dispatch }, keepId) {
+            api.delete('vaults/' + store.state.activeVault._id + '/keeps/' + keepId + '/remove')
+                .then(res => {
+                    console.log('removed keep from vault. Here is the response:')
+                    console.log(res)
+                    dispatch("GetVault", store.state.activeVault._id)
+                    dispatch("GetKeeps")
+                })
         },
         clearActiveVault({ commit, dispatch }) {
             commit("setActiveVault", {})
