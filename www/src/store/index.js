@@ -27,7 +27,7 @@ let auth = axios.create({
 var store = new vuex.Store({
     state: {
         user: {},
-        // vaults: [{ _id: "laiw;o0394u0", title: "cool Vault" }, { _id: "32342kl2;lkj", title: "awesome vault" }],
+        userKeeps: [],
         vaults: [],
         loggedIn: false,
         results: [],
@@ -38,7 +38,8 @@ var store = new vuex.Store({
         error: {},
         activeVault: {},
         activeKeep: { views: [] },
-        saveKeepSuccess: false
+        saveKeepSuccess: false,
+        accountDeleted: false
     },
     mutations: {
         setDefaultState(store) {
@@ -58,6 +59,9 @@ var store = new vuex.Store({
         },
         setUser(store, user) {
             store.user = user;
+        },
+        setUserKeeps(store, keeps) {
+            store.userKeeps = keeps;
         },
         setVaults(store, vaults) {
             store.vaults = vaults;
@@ -93,6 +97,9 @@ var store = new vuex.Store({
         },
         SetSaveKeepSuccess(state, value) {
             state.saveKeepSuccess = value;
+        },
+        SetAccountDeleted(store, value) {
+            state.accountDeleted = value;
         }
 
     },
@@ -133,6 +140,7 @@ var store = new vuex.Store({
                     commit("setUser", res.data.data)
                     commit("SetLoginWindow", false)
                     dispatch('GetVaults')
+                    dispatch('GetUserKeeps')
                 })
         },
         Logout({ commit, dispatch }) {
@@ -167,6 +175,15 @@ var store = new vuex.Store({
                 commit('setResults', res.data.data)
             })
         },
+        GetUserKeeps({ commit, dispatch }) {
+            api('my-keeps')
+                .then(res => {
+                    commit('setUserKeeps', res.data)
+                })
+                .catch(err => {
+                    console.log(err.message);
+                })
+        },
         AddKeep({ commit, dispatch }, keep) {
             //make a copy of the keep that doesn't have the vault key on it. The model is not expecting that.
             var purekeep = {
@@ -198,6 +215,31 @@ var store = new vuex.Store({
                     dispatch("GetVaults")
 
 
+                })
+        },
+        UpdateKeep({ commit, dispatch }, keep) {
+            api.put('keeps/' + store.state.activeKeep._id, keep)
+                .then(res => {
+                    console.log("update keep successful")
+                    console.log(res)
+                    dispatch("GetUserKeeps")
+                    dispatch("GetKeeps")
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
+        },
+        DeleteActiveKeep({ commit, dispatch }) {
+            api.delete('keeps/' + store.state.activeKeep._id)
+                .then(res => {
+                    commit("setActiveKeep", {})
+                    dispatch("GetUserKeeps")
+                })
+        },
+        DeleteKeep({ commit, dispatch }, keep) {
+            api.delete('keeps/' + keep._id)
+                .then(res => {
+                    dispatch("GetUserKeeps")
                 })
         },
         AddView({ commit, dispatch }, keep) {
@@ -281,11 +323,20 @@ var store = new vuex.Store({
                     commit('setLoggedIn', true)
                     dispatch("GetVaults")
                     dispatch("GetKeeps")
-                    router.push('/')
+                    // router.push('/')
                 })
                 .catch(err => {
                     commit('handleError', err)
                     router.push('/')
+                })
+        },
+        DeleteAccount({ commit, dispatch }) {
+            auth('deleteaccount')
+                .then(res => {
+                    if (res.error) {
+                        console.log('something went wrong')
+                    }
+                    commit('SetAccountDeleted', true)
                 })
         }
     }

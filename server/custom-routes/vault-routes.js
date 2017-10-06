@@ -59,39 +59,4 @@ module.exports = {
                 })
         }
     },
-
-    //  Doesn't work because forEach loop is not async capable.
-    // GetVaultKeeps: {
-    //     path: '/vaults/:vaultId/keeps',
-    //     reqType: 'get',
-    //     method(req, res, next) {
-    //         debugger
-    //         let vaultId = req.params.vaultId;
-    //         let action = 'get all keeps for a vault'
-    //         let vaultKeeps = []
-    //         // find the vault
-    //         Vaults.findOne({ _id: vaultId })
-    //             .then(vault => {
-    //                 // then find the keeps for the vault
-    //                 vault.keeps.forEach(keepId => {
-    //                     Keeps.findOne({ _id: keepId })
-    //                         .then(keep => {
-    //                             // when found, push them into the vaultKeeps array
-    //                             vaultKeeps.push(keep)
-    //                         })
-    //                         .catch(err => {
-    //                             console.log(err.message)
-    //                         })
-    //                 })
-
-    //                 console.log("found all keeps. Sending now")
-    //                 res.send({ action, vaultKeeps })
-
-    //             })
-    //             .catch(err => {
-    //                 console.log(err.message)
-    //             })
-    //     }
-    // }
-
 }

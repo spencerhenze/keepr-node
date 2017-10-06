@@ -2,7 +2,7 @@
     <div class="home">
         <v-layout row>
             <v-flex xs12 class="vault-title-block">
-                <h2>{{activeVault.name}}</h2>
+                <h3>{{activeVault.name}}</h3>
             </v-flex>
         </v-layout>
 

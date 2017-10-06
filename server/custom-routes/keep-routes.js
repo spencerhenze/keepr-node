@@ -26,6 +26,22 @@ module.exports = {
     //             })
     //     }
     // },
+    getUserKeeps: {
+        path: '/my-keeps',
+        reqType: 'get',
+        method(req, res, next) {
+            let action = 'Get all keeps the user has created'
+            Keeps.find({ creatorId: req.session.uid })
+                .then(keeps => {
+                    res.send(keeps)
+                })
+                .catch(err => {
+                    console.log(err.message)
+                    return next(handleResponse(action, null, error))
+                })
+        }
+    },
+
     view: {
         path: '/keeps/:keepId/view',
         reqType: 'put',
