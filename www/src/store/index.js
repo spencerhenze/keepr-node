@@ -171,11 +171,13 @@ var store = new vuex.Store({
                 })
         },
         GetKeeps({ commit, dispatch }) {
+            commit("setResults", [])
             api('keeps').then(res => {
                 commit('setResults', res.data.data)
             })
         },
         GetUserKeeps({ commit, dispatch }) {
+            commit("setUserKeeps", [])
             api('my-keeps')
                 .then(res => {
                     commit('setUserKeeps', res.data)
@@ -212,6 +214,7 @@ var store = new vuex.Store({
                     dispatch('SaveKeep', keep)
                     // dispatch("SaveToDevault", keep)
                     dispatch("GetKeeps")
+                    dispatch("GetUserKeeps")
                     dispatch("GetVaults")
 
 
@@ -232,14 +235,16 @@ var store = new vuex.Store({
         DeleteActiveKeep({ commit, dispatch }) {
             api.delete('keeps/' + store.state.activeKeep._id)
                 .then(res => {
-                    commit("setActiveKeep", {})
                     dispatch("GetUserKeeps")
+                    dispatch("GetKeeps")
+                    commit("setActiveKeep", {})
                 })
         },
         DeleteKeep({ commit, dispatch }, keep) {
             api.delete('keeps/' + keep._id)
                 .then(res => {
                     dispatch("GetUserKeeps")
+                    dispatch("GetKeeps")
                 })
         },
         AddView({ commit, dispatch }, keep) {

@@ -138,8 +138,8 @@
                 this.$store.dispatch("DeleteActiveKeep");
                 this.dialog = false;
             },
-            DeletKeep(keep) {
-                this.$store.dispatch("DeleteKeep")
+            DeleteKeep(keep) {
+                this.$store.dispatch("DeleteKeep", keep)
             },
             UpdateKeep() {
                 var keep = {

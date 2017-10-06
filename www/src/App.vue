@@ -155,7 +155,7 @@
         // addKeepWidth: setWidth(),
         keepTitle: null,
         keepDescription: null,
-        keepTags: null,
+        keepTags: [],
         src: '//res.cloudinary.com/keepr/image/upload/v1507065886/placeholder_uanfhh.jpg',
         selectedVault: null,
         private: false,
