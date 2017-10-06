@@ -51,7 +51,7 @@
                     <p v-if="confirmPassword && password!=confirmPassword" class="red">Passwords don't match</p>
                     <v-btn v-if="name && email && password && password==confirmPassword" success dark @click.stop="RegisterUser">Submit</v-btn>
                     <v-btn v-else success dark disabled>Submit</v-btn>
-                    <v-btn primary dark @click="registerForm = false">Back to Login</v-btn>
+                    <v-btn primary dark @click="BackToLogin">Login</v-btn>
                 </v-form>
 
             </v-card-text>
@@ -77,7 +77,7 @@
                     <v-btn v-if="email && password" success dark @click="Login">Send It!</v-btn>
                     <v-btn v-else success dark @click.stop="Login" disabled>Send It!</v-btn>
                     <!-- go to register form -->
-                    <v-btn primary dark @click="registerForm = true">Register</v-btn>
+                    <v-btn primary dark @click="ShowRegister">Register</v-btn>
                 </v-form>
 
             </v-card-text>
@@ -93,7 +93,6 @@
         name: 'login',
         data() {
             return {
-                registerForm: false,
                 name: null,
                 email: null,
                 password: null,
@@ -103,9 +102,6 @@
                 profileImg: '//res.cloudinary.com/keepr/image/upload/v1507162512/GenericUser_jvtsds.png'
             }
         },
-        props: [
-            'loginWindow'
-        ],
         methods: {
             Login() {
                 var credentials = {
@@ -146,6 +142,14 @@
             CloseLoginWindow() {
                 this.$store.dispatch("SetLoginWindow", false);
             },
+            BackToLogin() {
+                this.$store.dispatch("SetRegisterForm", false);
+                this.$store.dispatch("SetLoginWindow", true);
+            },
+            ShowRegister() {
+                this.$store.dispatch("SetRegisterForm", true);
+                this.$store.dispatch("SetLoginWindow", true);
+            },
             ResetLoginError() {
                 this.$store.dispatch("ResetLoginError")
             }
@@ -159,6 +163,9 @@
             },
             loginError() {
                 return this.$store.state.loginError;
+            },
+            registerForm() {
+                return this.$store.state.registerForm;
             }
         }
     }

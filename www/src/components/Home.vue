@@ -7,7 +7,7 @@
       <v-layout row wrap>
 
         <!-- load results -->
-        <v-flex v-bind="{ [`xs${card.flex}`]: true }" v-for="card in results" :key="card.title">
+        <v-flex v-bind="{ [`xs${card.flex}`]: true }" v-for="card in results" :key="card.name">
 
           <v-card>
             <!-- picture & Title -->
@@ -15,7 +15,7 @@
               <v-container fill-height fluid>
                 <v-layout fill-height>
                   <v-flex xs12 align-end flexbox>
-                    <span class="headline white--text" v-text="card.title"></span>
+                    <span class="headline white--text" v-text="card.name"></span>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -81,7 +81,7 @@
               <span class="white--text" v-text="activeKeep.description"></span>
             </v-card-text>
             <v-flex>
-              <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="activeKeep.views"></span>
+              <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="activeKeep.views.length"></span>
               <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="activeKeep.saves"></span>
             </v-flex>
           </v-card>
@@ -98,26 +98,28 @@
     name: 'home',
     data() {
       return {
-        activeKeep: {},
         msg: 'Welcome to Your Vue.js App',
         dialog: false
       }
     },
     methods: {
       expandKeep(keep) {
-        this.activeKeep = keep;
         this.dialog = true;
+        this.$store.dispatch('SetActiveKeep', keep)
       }
     },
     computed: {
       results() {
         return this.$store.state.results;
+      },
+      activeKeep() {
+        return this.$store.state.activeKeep
       }
     },
     mounted() {
       this.$store.dispatch('GetKeeps')
       this.$store.dispatch('getAuth')
-    }
+    },
   }
 
 </script>

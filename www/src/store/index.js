@@ -33,9 +33,11 @@ var store = new vuex.Store({
         results: [],
         vaultKeeps: [],
         loginWindow: false,
+        registerForm: false,
         loginError: false,
         error: {},
-        activeVault: {}
+        activeVault: {},
+        activeKeep: { views: [] }
     },
     mutations: {
         setDefaultState(store) {
@@ -43,6 +45,9 @@ var store = new vuex.Store({
         },
         SetLoginWindow(store, value) {
             store.loginWindow = value;
+        },
+        SetRegisterForm(store, value) {
+            store.registerForm = value;
         },
         setLoggedIn(store, value) {
             store.loggedIn = value;
@@ -79,6 +84,9 @@ var store = new vuex.Store({
         setActiveVault(store, vault) {
             store.activeVault = vault;
         },
+        setActiveKeep(store, keep) {
+            store.activeKeep = keep;
+        },
         handleError(state, err) {
             state.error = err
         }
@@ -87,6 +95,9 @@ var store = new vuex.Store({
     actions: {
         SetLoginWindow({ commit, dispatch }, value) {
             commit("SetLoginWindow", value)
+        },
+        SetRegisterForm({ commit, dispatch }, value) {
+            commit("SetRegisterForm", value)
         },
         ResetLoginError({ commit, dispatch }) {
             commit("SetLoginError", false)
@@ -230,6 +241,9 @@ var store = new vuex.Store({
         },
         clearActiveVault({ commit, dispatch }) {
             commit("setActiveVault", {})
+        },
+        SetActiveKeep({ commit, dispatch }, keep) {
+            commit("setActiveKeep", keep);
         },
 
         getAuth({ commit, dispatch }) {

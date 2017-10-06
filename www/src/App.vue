@@ -64,7 +64,10 @@
       <img src="http://res.cloudinary.com/dvh7zccln/image/upload/v1506964113/powerline_k_ready_qjmbox.png" alt="" style="max-height:70px">
       <v-toolbar-title v-text="title" style="margin-left: -15px"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="!loggedIn" primary dark @click.stop="OpenLoginWindow">Login</v-btn>
+      <v-btn v-if="!loggedIn" primary dark @click.stop="OpenRegisterWindow">Register</v-btn>
+      <v-btn v-if="!loggedIn" fab dark medium class="transparent" style="box-shadow:none; margin-right:1.5rem;" @click.stop="OpenLoginWindow">
+        <v-icon>fa-sign-in</v-icon>
+      </v-btn>
       <router-link v-if="loggedIn" :to="{ name: 'Profile'}">
         <div id="user-identifier">
           <p id="user-name-display">{{user.name}}</p>
@@ -130,7 +133,7 @@
 
     <!-- login/register modal -->
     <v-dialog v-model="loginWindow" lazy absolute persistent width="50%">
-      <login props="loginWindow"></login>
+      <login></login>
     </v-dialog>
 
   </v-app>
@@ -186,8 +189,13 @@
       OpenLoginWindow() {
         this.$store.dispatch("SetLoginWindow", true);
       },
+      OpenRegisterWindow() {
+        this.$store.dispatch("SetLoginWindow", true);
+        this.$store.dispatch("SetRegisterForm", true);
+      },
       CloseLoginWindow() {
-        this.$store.dispatch("SetLoginWindow", false)
+        this.$store.dispatch("SetLoginWindow", false);
+        this.$store.dispatch("SetRegisterForm", false);
       },
       openCloud() {
         // this.signedIn()
