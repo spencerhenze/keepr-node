@@ -37,7 +37,8 @@ var store = new vuex.Store({
         loginError: false,
         error: {},
         activeVault: {},
-        activeKeep: { views: [] }
+        activeKeep: { views: [] },
+        saveKeepSuccess: false
     },
     mutations: {
         setDefaultState(store) {
@@ -89,6 +90,9 @@ var store = new vuex.Store({
         },
         handleError(state, err) {
             state.error = err
+        },
+        SetSaveKeepSuccess(state, value) {
+            state.saveKeepSuccess = value;
         }
 
     },
@@ -209,6 +213,17 @@ var store = new vuex.Store({
                     if (keep.creatorId == store.state.user._id.toString()) {
                         dispatch("SaveToDevault", keep)
                     }
+                    dispatch("GetVaults")
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        SaveActiveKeep({ commit, dispatch }, vaultId) {
+            api.put('vaults/' + vaultId + '/keeps/' + store.state.activeKeep._id + '/save')
+                .then(res => {
+                    console.log(keep.name + "successfully added to vault: " + keep.vault)
+                    commit("SetSaveKeepSuccess", true);
                     dispatch("GetVaults")
                 })
                 .catch(error => {

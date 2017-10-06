@@ -24,12 +24,12 @@
             <!-- button row -->
             <v-card-actions class="white">
               <v-spacer></v-spacer>
-              <v-btn v-if="loggedIn" icon>
+              <!-- <v-btn v-if="loggedIn" icon>
                 <v-icon class="grey--text">favorite</v-icon>
               </v-btn>
               <v-btn v-if="loggedIn" icon>
                 <v-icon class="grey--text">bookmark</v-icon>
-              </v-btn>
+              </v-btn> -->
               <v-btn icon>
                 <v-icon class="grey--text">share</v-icon>
               </v-btn>
@@ -48,7 +48,7 @@
         </v-flex>
         <!-- end load results -->
 
-        <!-- Modal -->
+        <!-- Modal (expanded view)-->
         <v-dialog v-model="dialog" lazy absolute width="80%">
           <v-card>
             <!-- picture & Title -->
@@ -65,10 +65,10 @@
             <!-- button row -->
             <v-card-actions class="white">
               <v-spacer></v-spacer>
-              <v-btn v-if="loggedIn" icon>
+              <!-- <v-btn v-if="loggedIn" icon>
                 <v-icon class="grey--text">favorite</v-icon>
-              </v-btn>
-              <v-btn v-if="loggedIn" icon>
+              </v-btn> -->
+              <v-btn v-if="loggedIn" icon @click.stop="ShowSaveKeepMenu">
                 <v-icon class="grey--text">bookmark</v-icon>
               </v-btn>
               <v-btn icon>
@@ -87,6 +87,43 @@
           </v-card>
         </v-dialog>
 
+        <!-- save keep modal -->
+        <v-dialog v-model="showSaveMenu" lazy absolute width="50%">
+          <v-card>
+            <v-card-media class="modal-image" :src="activeKeep.imgUrl" height="300">
+              <v-container fill-height fluid>
+                <v-layout fill-height>
+                  <span class="headline white--text">{{activeKeep.name}}</span>
+                </v-layout>
+              </v-container>
+            </v-card-media>
+
+            <v-card-title>
+              <div class="headline">Save keep</div>
+            </v-card-title>
+            <v-card-text>
+              <!-- need to get the vault from the dropdown menu -->
+              <div class="white--text" style="margin-bottom: 5rem;">{{activeKeep.description}}</div>
+              <v-form>
+                <v-select label="Choose Vault" v-model="selectedVault" :items="vaults" item-text="name" item-value="vault" dark required></v-select>
+                <v-btn v-if="selectedVault" class="save-button" success dark @click="SaveKeep">Send It!</v-btn>
+                <v-btn v-else class="save-button" success dark @click="SaveKeep" disabled>Save</v-btn>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="saveKeepSuccess" lazy absolute persistent width="50%">
+          <v-card>
+            <v-card-title class="headline">Success</v-card-title>
+            <v-card-text>
+              <p>
+                <v-icon medium>check_circle</v-icon> Save Successful</p>
+              <v-btn success dark @click="CloseSuccessMessage">Ok</v-btn>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
 
       </v-layout>
     </v-container>
@@ -99,7 +136,9 @@
     data() {
       return {
         msg: 'Welcome to Your Vue.js App',
-        dialog: false
+        dialog: false,
+        showSaveMenu: false,
+        selectedVault: null
       }
     },
     methods: {
@@ -107,6 +146,18 @@
         this.dialog = true;
         this.$store.dispatch('SetActiveKeep', keep)
         this.$store.dispatch('AddView', keep)
+      },
+      ShowSaveKeepMenu() {
+        this.dialog = false;
+        this.showSaveMenu = true;
+      },
+      SaveKeep() {
+        this.$store.dispatch("SaveActiveKeep", this.selectedVault._id)
+        this.showSaveMenu = false;
+        this.dialog = false;
+      },
+      CloseSuccessMessage() {
+        this.$store.commit("SetSaveKeepSuccess", false)
       }
     },
     computed: {
@@ -118,6 +169,12 @@
       },
       loggedIn() {
         return this.$store.state.loggedIn;
+      },
+      vaults() {
+        return this.$store.state.vaults;
+      },
+      saveKeepSuccess() {
+        return this.$store.state.saveKeepSuccess;
       }
     },
     mounted() {
@@ -157,5 +214,9 @@
     margin-left: 15px;
     margin-right: 0.8rem;
     margin-bottom: 10px;
+  }
+
+  .save-button {
+    width: 100%;
   }
 </style>

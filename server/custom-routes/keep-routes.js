@@ -30,7 +30,6 @@ module.exports = {
         path: '/keeps/:keepId/view',
         reqType: 'put',
         method(req, res, next) {
-            debugger
             let action = 'View keep';
             Keeps.findById(req.params.keepId)
                 .then(keep => {
