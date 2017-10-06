@@ -157,6 +157,7 @@ var store = new vuex.Store({
                 .then((res) => {
                     dispatch('getAuth')
                     commit('setDefaultState')
+                    dispatch('GetKeeps')
                 })
         },
 
