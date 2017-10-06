@@ -24,10 +24,10 @@
             <!-- button row -->
             <v-card-actions class="white">
               <v-spacer></v-spacer>
-              <v-btn icon>
+              <v-btn v-if="loggedIn" icon>
                 <v-icon class="grey--text">favorite</v-icon>
               </v-btn>
-              <v-btn icon>
+              <v-btn v-if="loggedIn" icon>
                 <v-icon class="grey--text">bookmark</v-icon>
               </v-btn>
               <v-btn icon>
@@ -56,7 +56,7 @@
               <v-container fill-height fluid>
                 <v-layout fill-height>
                   <v-flex xs12 align-end flexbox>
-                    <span class="headline white--text" v-text="activeKeep.title"></span>
+                    <span class="headline white--text" v-text="activeKeep.name"></span>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -65,10 +65,10 @@
             <!-- button row -->
             <v-card-actions class="white">
               <v-spacer></v-spacer>
-              <v-btn icon>
+              <v-btn v-if="loggedIn" icon>
                 <v-icon class="grey--text">favorite</v-icon>
               </v-btn>
-              <v-btn icon>
+              <v-btn v-if="loggedIn" icon>
                 <v-icon class="grey--text">bookmark</v-icon>
               </v-btn>
               <v-btn icon>
@@ -106,6 +106,7 @@
       expandKeep(keep) {
         this.dialog = true;
         this.$store.dispatch('SetActiveKeep', keep)
+        this.$store.dispatch('AddView', keep)
       }
     },
     computed: {
@@ -114,6 +115,9 @@
       },
       activeKeep() {
         return this.$store.state.activeKeep
+      },
+      loggedIn() {
+        return this.$store.state.loggedIn;
       }
     },
     mounted() {
@@ -151,6 +155,7 @@
 
   .bottom-icons {
     margin-left: 15px;
+    margin-right: 0.8rem;
     margin-bottom: 10px;
   }
 </style>

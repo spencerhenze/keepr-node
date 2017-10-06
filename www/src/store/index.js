@@ -196,6 +196,12 @@ var store = new vuex.Store({
 
                 })
         },
+        AddView({ commit, dispatch }, keep) {
+            api.put('/keeps/' + keep._id + '/view')
+                .then(res => {
+                    dispatch("GetKeeps")
+                })
+        },
         SaveKeep({ commit, dispatch }, keep) {
             api.put('vaults/' + keep.vault + '/keeps/' + keep.id + '/save')
                 .then(res => {

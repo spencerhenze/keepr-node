@@ -8,70 +8,59 @@ let mongoose = require('mongoose')
 //2. hit the save keep route to add the keep to the vault's list of keeps
 
 module.exports = {
-    searchByTag: {
-        // This may or may not work. Needs testing
-        path: '/keeps/search/tags',
-        reqType: 'get',
+    // searchByTag: {
+    //     // This may or may not work. Needs testing
+    //     path: '/keeps/search/tags',
+    //     reqType: 'get',
+    //     method(req, res, next) {
+    //         let action = 'Find keep by tag'
+    //         let names = req.query.tags.split(',');
+    //         let limit = Math.min(50, req.query.limit || 20);
+    //         let offset = parseInt(req.query.offset) || 0;
+    //         Keeps.find({ tags: { $all: names } }).limit(limit).skip(offset)
+    //             .then(keeps => {
+    //                 res.send(handleResponse(action, keeps))
+    //             })
+    //             .catch(error => {
+    //                 return next(handleResponse(action, null, error))
+    //             })
+    //     }
+    // },
+    view: {
+        path: '/keeps/:keepId/view',
+        reqType: 'put',
         method(req, res, next) {
-            let action = 'Find keep by tag'
-            let names = req.query.tags.split(',');
-            let limit = Math.min(50, req.query.limit || 20);
-            let offset = parseInt(req.query.offset) || 0;
-            Keeps.find({ tags: { $all: names } }).limit(limit).skip(offset)
-                .then(keeps => {
-                    res.send(handleResponse(action, keeps))
+            debugger
+            let action = 'View keep';
+            Keeps.findById(req.params.keepId)
+                .then(keep => {
+                    if (updateKeepViews(keep, req.session.uid)) {
+                        keep.views.push(req.session.uid)
+                        keep.save()
+                            .then(() => {
+                                res.send(handleResponse(action, keep))
+                            })
+                            .catch(error => {
+                                return next(handleResponse(action, null, error))
+                            })
+                    }
                 })
                 .catch(error => {
                     return next(handleResponse(action, null, error))
                 })
         }
-    },
-    like: {
-        path: '/keeps/:keepId/like',
-        reqType: 'put',
-        method(req, res, next) {
-            // let action = 'Like tattoo';
-            // Tattoos.findById(req.params.tattooId)//.select('likes').exec()
-            //     .then(tattoo => {
-            //         if (updateTattooLikes(tattoo, req.session.uid)) {
-            //             User.findById(tattoo.creatorId)
-            //                 .then(user => {
-            //                     user.weeklyLikes.push(Date.now())
-            //                     user.save()
-            //                         .then(() => {
-            //                             console.log('updated weekly likes')
-            //                         })
-            //                 })
-            //         }
-            //         tattoo.save()
-            //             .then(() => {
-            //                 // tattoo.likes = []
-            //                 res.send(handleResponse(action, tattoo))
-            //             })
-            //             .catch(error => {
-            //                 return next(handleResponse(action, null, error))
-            //             })
-
-            //     })
-            //     .catch(error => {
-            //         return next(handleResponse(action, null, error))
-            //     })
-        }
     }
 }
 
-function updateTattooLikes(tattoo, userId) {
-    let index = tattoo.likes.indexOf(userId);
-    let liked;
+function updateKeepViews(keep, userId) {
+    let index = keep.views.indexOf(userId);
+    let viewed;
     if (index == -1) {
-        tattoo.likes.push(userId);
-        liked = true
+        viewed = true
     } else {
-        tattoo.likes.splice(index, 1);
-        liked = false
+        viewed = false
     }
-    tattoo.numLikes = tattoo.likes.length;
-    return liked;
+    return viewed;
 }
 
 function handleResponse(action, data, error) {
