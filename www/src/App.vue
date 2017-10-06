@@ -132,7 +132,7 @@
     </v-dialog>
 
     <!-- login/register modal -->
-    <v-dialog v-model="loginWindow" lazy absolute persistent width="50%">
+    <v-dialog v-model="loginWindow" lazy absolute persistent :width="viewWidth">
       <login></login>
     </v-dialog>
 
@@ -142,10 +142,27 @@
 <script>
   import Login from './components/login'
 
+  function CalculateModalW() {
+    var vw = Math.max(document.documentElement.clientWidth, window.innerWidth)
+    if (vw <= 600) {
+      return "90%"
+    }
+    else if (600 < vw && vw <= 768) {
+      var width = (-45 / 302) * vw + (25140 / 151)
+      return width.toString() + "%";
+    }
+    else if (768 < vw && vw <= 1264) {
+      var width = (-35 / 302) * vw + (25140 / 151)
+      return width.toString() + "%";
+    }
+    else if (vw > 1264) {
+      return "25%"
+    }
+  }
   export default {
     data() {
       return {
-        // viewWidth: Math.log10(Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / 10) + (.6 * Math.max(document.documentElement.clientWidth, window.innerWidth)),
+        viewWidth: CalculateModalW(),
         drawer: false,
         items: [
           { icon: 'bubble_chart', title: 'Inspire' }
