@@ -179,6 +179,28 @@ var store = new vuex.Store({
                     dispatch("GetVaults")
                 })
         },
+        UpdateVault({ commit, dispatch }, vault) {
+            api.put('vaults/' + vault._id, vault)
+                .then(res => {
+                    console.log("Update vault complete:")
+                    console.log(res)
+                    dispatch("GetVaults")
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
+        },
+        DeleteVault({ commit, dispatch }, vault) {
+            api.delete('vaults/' + vault._id)
+                .then(res => {
+                    console.log('vault deleted. Here is the response:')
+                    console.log(res)
+                    dispatch("GetVaults")
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
+        },
         GetKeeps({ commit, dispatch }) {
             commit("setResults", [])
             api('keeps').then(res => {
