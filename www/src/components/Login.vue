@@ -109,7 +109,7 @@
         methods: {
             Login() {
                 var credentials = {
-                    email: this.email,
+                    email: this.email.toLowerCase(),
                     password: this.password
                 }
                 this.$store.dispatch('Login', credentials)
@@ -119,7 +119,6 @@
                         if (this.user.name) {
                             this.CloseLoginWindow();
                         }
-
                         this.failMessage = true;
 
                     })
@@ -135,7 +134,7 @@
                 if (this.password == this.confirmPassword) {
                     var newUser = {
                         name: this.name,
-                        email: this.email,
+                        email: this.email.toLowerCase(),
                         password: this.password,
                         profileImg: this.profileImg
                     }
