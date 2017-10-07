@@ -1,12 +1,21 @@
 <template>
     <div class="home">
-        <v-layout row>
-            <v-flex xs12 class="vault-title-block">
-                <h3>{{activeVault.name}}</h3>
-            </v-flex>
-        </v-layout>
 
         <v-container fluid grid-list-md class="transparent">
+
+            <v-layout row>
+
+                <v-flex xs3 class="vault-title-block">
+                    <router-link :to="{ name: 'Vaults' }">
+                        <v-btn fab primary dark>
+                            <v-icon dark>keyboard_backspace</v-icon>
+                        </v-btn>
+                    </router-link>
+                </v-flex>
+                <v-flex xs9 offset-sm1 offset-md2>
+                    <h3>{{activeVault.name}}</h3>
+                </v-flex>
+            </v-layout>
 
             <v-layout row wrap>
 
@@ -169,6 +178,10 @@
     .vault-title-block {
         display: flex;
         justify-content: center;
+    }
+
+    a:hover {
+        text-decoration: none
     }
 
     h1,
