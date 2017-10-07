@@ -11,7 +11,7 @@
 
           <v-card>
             <!-- picture & Title -->
-            <v-card-media :src="card.imgUrl" height="200px" @click.stop="expandKeep(card)">
+            <v-card-media :src="card.imgUrl" :height="minImgHeight" @click.stop="expandKeep(card)">
               <v-container fill-height fluid>
                 <v-layout fill-height>
                   <v-flex xs12 align-end flexbox>
@@ -143,12 +143,18 @@
     }
   }
 
+  function CalcMinImgH() {
+    var vw = Math.max(document.documentElement.clientWidth, window.innerWidth)
+    return .45 * vw + 'px'
+  }
+
 
   export default {
     name: 'home',
     data() {
       return {
         viewWidth: CalculateModalW(),
+        minImgHeight: CalcMinImgH(),
         dialog: false,
         showSaveMenu: false,
         selectedVault: null
