@@ -41,12 +41,6 @@
                                 <v-icon class="grey--text remove-icon">fa-trash</v-icon>
                             </v-btn>
                             <v-spacer></v-spacer>
-                            <!-- <v-btn icon>
-                                <v-icon class="grey--text">favorite</v-icon>
-                            </v-btn> -->
-                            <!-- <v-btn icon>
-                                <v-icon class="grey--text">bookmark</v-icon>
-                            </v-btn> -->
                             <v-btn icon>
                                 <v-icon class="grey--text">share</v-icon>
                             </v-btn>
@@ -56,13 +50,13 @@
                         <v-card-text>
                             <span class="white--text" v-text="card.description"></span>
                         </v-card-text>
-                        <v-layout row>
-                            <v-flex xs6>
+                        <v-layout row wrap>
+                            <v-flex xs12 md6>
                                 <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="card.views.length"></span>
                                 <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="card.saves"></span>
                             </v-flex>
                             <!-- Chip  -->
-                            <v-flex xs6 class="chip-keep">
+                            <v-flex xs12 md6 class="chip-keep">
                                 <v-chip>
                                     <v-avatar>
                                         <img :src="card.creatorPhoto" alt="creator photo">

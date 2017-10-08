@@ -7,7 +7,7 @@
       <v-layout row wrap>
 
         <!-- load results -->
-        <v-flex v-bind="{ [`xs${card.flex}`]: true }" v-for="card in results" :key="card.name">
+        <v-flex v-bind="{ [`sm${card.flex}`]: true }" v-for="card in results" :key="card.name">
 
           <v-card>
             <!-- picture & Title -->
@@ -33,13 +33,13 @@
             <v-card-text>
               <span class="white--text" v-text="card.description"></span>
             </v-card-text>
-            <v-layout row>
-              <v-flex xs6>
+            <v-layout row wrap>
+              <v-flex xs12 md6>
                 <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="card.views.length"></span>
                 <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="card.saves"></span>
               </v-flex>
               <!-- Chip  -->
-              <v-flex xs6 class="chip-keep">
+              <v-flex xs12 md6 class="chip-keep">
                 <v-chip>
                   <v-avatar>
                     <img :src="card.creatorPhoto" alt="creator photo">
