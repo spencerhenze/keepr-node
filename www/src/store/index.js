@@ -212,6 +212,7 @@ var store = new vuex.Store({
                         filteredKeeps.push(keep)
                     }
                 })
+
                 commit('setResults', filteredKeeps)
             })
         },
@@ -239,7 +240,9 @@ var store = new vuex.Store({
                 imgUrl: keep.imgUrl,
                 tags: keep.tags,
                 private: keep.private,
-                vault: keep.vault
+                vault: keep.vault,
+                creatorName: store.state.user.name,
+                creatorPhoto: store.state.user.profileImg
             }
             // send the model-friendly keep to the default POST route
             api.post('keeps', purekeep)

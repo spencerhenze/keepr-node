@@ -33,10 +33,21 @@
             <v-card-text>
               <span class="white--text" v-text="card.description"></span>
             </v-card-text>
-            <v-flex>
-              <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="card.views.length"></span>
-              <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="card.saves"></span>
-            </v-flex>
+            <v-layout row>
+              <v-flex xs6>
+                <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="card.views.length"></span>
+                <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="card.saves"></span>
+              </v-flex>
+              <!-- Chip  -->
+              <v-flex xs6 class="chip-keep">
+                <v-chip>
+                  <v-avatar>
+                    <img :src="card.creatorPhoto" alt="creator photo">
+                  </v-avatar>
+                  {{card.creatorName}}
+                </v-chip>
+              </v-flex>
+            </v-layout>
           </v-card>
 
         </v-flex>
@@ -237,5 +248,12 @@
 
   .save-button {
     width: 100%;
+  }
+
+  .chip-keep {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    margin-right: 10px;
   }
 </style>

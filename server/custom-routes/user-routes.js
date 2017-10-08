@@ -67,6 +67,36 @@ module.exports = {
                 })
         }
 
+    },
+
+    //This route adds the attributes needed for chips
+    addCreatorInfoToKeeps: {
+        path: '/addcreatorinfo',
+        reqType: 'get',
+        method(req, res, next) {
+            let action = 'add creator image and name to keep objects'
+            var stream = Keeps.find().stream();
+
+            stream.on('data', function (keep) {
+                User.findById({ _id: keep.creatorId })
+                    .then(user => {
+                        console.log(user)
+                        keep.creatorPhoto = user.profileImg;
+                        keep.creatorName = user.name;
+                        keep.save();
+                    })
+            })
+                .on('error', function (err) {
+                    console.log(err.message)
+                })
+                .on('close', function () {
+                    console.log('keeps updated successfully.')
+                    res.send({ message: 'keeps updated successfully' })
+                })
+
+
+
+        }
     }
 
 }
