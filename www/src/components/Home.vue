@@ -35,8 +35,10 @@
             </v-card-text>
             <v-layout row wrap>
               <v-flex xs12 md6>
-                <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="card.views.length"></span>
-                <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="card.saves"></span>
+                <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon>
+                <span class="grey--text" v-text="card.views.length"></span>
+                <v-icon class="grey--text bottom-icons">bookmark</v-icon>
+                <span class="grey--text" v-text="card.saves"></span>
               </v-flex>
               <!-- Chip  -->
               <v-flex xs12 md6 class="chip-keep">
@@ -85,10 +87,25 @@
             <v-card-text>
               <span class="white--text" v-text="activeKeep.description"></span>
             </v-card-text>
-            <v-flex>
-              <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="activeKeep.views.length"></span>
-              <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="activeKeep.saves"></span>
-            </v-flex>
+            <v-layout row wrap>
+              <v-flex xs12 md6>
+                <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon>
+                <span class="grey--text" v-text="activeKeep.views.length"></span>
+                <v-icon class="grey--text bottom-icons">bookmark</v-icon>
+                <span class="grey--text" v-text="activeKeep.saves"></span>
+              </v-flex>
+              <!-- Chip  -->
+              <v-flex xs12 md6 class="chip-keep">
+                <router-link :to="'/users/' + activeKeep.creatorId">
+                  <v-chip>
+                    <v-avatar>
+                      <img :src="activeKeep.creatorPhoto" alt="creator photo">
+                    </v-avatar>
+                    {{activeKeep.creatorName}}
+                  </v-chip>
+                </router-link>
+              </v-flex>
+            </v-layout>
           </v-card>
         </v-dialog>
 

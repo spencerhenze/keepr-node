@@ -2,6 +2,7 @@
     <div class="login">
 
         <v-layout row>
+            <h1>hello</h1>
             <v-flex xs12>
                 <form @submit.prevent="openCloud">
                     <v-btn primary dark>Upload</v-btn>
@@ -36,5 +37,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="vault">
 
         <v-container fluid grid-list-md class="transparent">
 
@@ -52,8 +52,10 @@
                         </v-card-text>
                         <v-layout row wrap>
                             <v-flex xs12 md6>
-                                <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="card.views.length"></span>
-                                <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="card.saves"></span>
+                                <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon>
+                                <span class="grey--text" v-text="card.views.length"></span>
+                                <v-icon class="grey--text bottom-icons">bookmark</v-icon>
+                                <span class="grey--text" v-text="card.saves"></span>
                             </v-flex>
                             <!-- Chip  -->
                             <v-flex xs12 md6 class="chip-keep">
@@ -100,10 +102,23 @@
                         <v-card-text>
                             <span class="white--text" v-text="activeKeep.description"></span>
                         </v-card-text>
-                        <v-flex class="bottom-icon-container">
-                            <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text counts" v-text="activeKeep.views.length"></span>
-                            <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text counts" v-text="activeKeep.saves"></span>
-                        </v-flex>
+                        <v-layout row wrap>
+                            <v-flex xs12 md6>
+                                <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon>
+                                <span class="grey--text" v-text="activeKeep.views.length"></span>
+                                <v-icon class="grey--text bottom-icons">bookmark</v-icon>
+                                <span class="grey--text" v-text="activeKeep.saves"></span>
+                            </v-flex>
+                            <!-- Chip  -->
+                            <v-flex xs12 md6 class="chip-keep">
+                                <v-chip>
+                                    <v-avatar>
+                                        <img :src="activeKeep.creatorPhoto" alt="creator photo">
+                                    </v-avatar>
+                                    {{activeKeep.creatorName}}
+                                </v-chip>
+                            </v-flex>
+                        </v-layout>
                     </v-card>
                 </v-dialog>
 
@@ -134,7 +149,7 @@
 
 
     export default {
-        name: 'home',
+        name: 'vault',
         data() {
             return {
                 viewWidth: CalculateModalW(),
@@ -208,10 +223,13 @@
         color: #42b983;
     }
 
+
     .bottom-icons {
         margin-left: 15px;
+        margin-right: 0.8rem;
         margin-bottom: 10px;
     }
+
 
     .counts {
         margin-left: .4rem;

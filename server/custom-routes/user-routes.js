@@ -97,6 +97,26 @@ module.exports = {
 
 
         }
+    },
+
+    getBasicUserInfo: {
+        path: "/users/:userId/basic",
+        reqType: 'get',
+        method(req, res, next) {
+            let userId = req.params.userId
+            User.findById({ _id: userId })
+                .then(user => {
+                    var cleanUser = {
+                        name: user.name,
+                        profileImg: user.profileImg,
+                    }
+
+                    res.send(cleanUser)
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
+        }
     }
 
 }

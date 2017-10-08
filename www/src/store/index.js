@@ -27,6 +27,7 @@ let auth = axios.create({
 var store = new vuex.Store({
     state: {
         user: {},
+        queriedUser: {},
         userKeeps: [],
         vaults: [],
         loggedIn: false,
@@ -110,6 +111,9 @@ var store = new vuex.Store({
         SetSaveKeepSuccess(state, value) {
             state.saveKeepSuccess = value;
         },
+        setQueriedUser(store, user) {
+            state.queriedUser = user;
+        }
 
     },
     actions: {
@@ -230,6 +234,23 @@ var store = new vuex.Store({
                 })
                 .catch(err => {
                     console.log(err.message);
+                })
+        },
+        GetAUsersKeeps({ commit, dispatch }, userId) {
+            // commit("setResults", {})
+            api("users/" + userId + "/keeps")
+                .then(keeps => {
+                    commit("setResults", keeps)
+                })
+        },
+        GetAUser({ commit, dispatch }, userId) {
+            api("users/" + userId + "/basic")
+                .then(user => {
+                    commit("setQueriedUser", user)
+                    dispatch("GetAUsersKeeps", userId)
+                })
+                .catch(err => {
+                    console.log(err.message)
                 })
         },
         AddKeep({ commit, dispatch }, keep) {
