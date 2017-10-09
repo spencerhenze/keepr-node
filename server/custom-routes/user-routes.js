@@ -117,6 +117,20 @@ module.exports = {
                     console.log(err.message)
                 })
         }
+    },
+
+    getAUsersKeeps: {
+        path: "/users/:userId/keeps",
+        reqType: 'get',
+        method(req, res, next) {
+            Keeps.find({ creatorId: req.params.userId })
+                .then(keeps => {
+                    res.send(keeps)
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
+        }
     }
 
 }

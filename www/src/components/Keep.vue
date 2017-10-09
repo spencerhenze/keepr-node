@@ -41,7 +41,8 @@
                 </v-flex>
                 <!-- Chip  -->
                 <v-flex xs12 md6 class="chip-keep-expanded">
-                    <router-link :to="'/users/' + activeKeep.creatorId">
+                    <!-- <router-link :to="'/users/' + activeKeep.creatorId"> -->
+                    <router-link :to="'/users/' +activeKeep.creatorId">
                         <v-chip>
                             <v-avatar>
                                 <img :src="activeKeep.creatorPhoto" alt="creator photo">

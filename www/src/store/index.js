@@ -96,6 +96,9 @@ var store = new vuex.Store({
             })
             store.results = data;
         },
+        clearResults(store) {
+            store.results = [];
+        },
         clearVaultKeeps(store) {
             store.vaultKeeps = [];
         },
@@ -105,14 +108,14 @@ var store = new vuex.Store({
         setActiveKeep(store, keep) {
             store.activeKeep = keep;
         },
-        handleError(state, err) {
-            state.error = err
+        handleError(store, err) {
+            store.error = err
         },
-        SetSaveKeepSuccess(state, value) {
-            state.saveKeepSuccess = value;
+        SetSaveKeepSuccess(store, value) {
+            store.saveKeepSuccess = value;
         },
         setQueriedUser(store, user) {
-            state.queriedUser = user;
+            store.queriedUser = user;
         }
 
     },
@@ -239,13 +242,14 @@ var store = new vuex.Store({
         GetAUsersKeeps({ commit, dispatch }, userId) {
             // commit("setResults", {})
             api("users/" + userId + "/keeps")
-                .then(keeps => {
-                    commit("setResults", keeps)
+                .then(res => {
+                    commit("setResults", res.data)
                 })
         },
         GetAUser({ commit, dispatch }, userId) {
             api("users/" + userId + "/basic")
-                .then(user => {
+                .then(res => {
+                    let user = res.data
                     commit("setQueriedUser", user)
                     dispatch("GetAUsersKeeps", userId)
                 })
@@ -404,7 +408,7 @@ var store = new vuex.Store({
                     commit('setUser', res.data.data)
                     commit('setLoggedIn', true)
                     dispatch("GetVaults")
-                    dispatch("GetKeeps")
+                    // dispatch("GetKeeps")
                     // router.push('/')
                 })
                 .catch(err => {
