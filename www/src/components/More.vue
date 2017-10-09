@@ -45,9 +45,6 @@
 
                         <!-- button row -->
                         <v-card-actions class="white">
-                            <v-btn icon @click="RemoveKeep(card)">
-                                <v-icon class="grey--text remove-icon">fa-trash</v-icon>
-                            </v-btn>
                             <v-spacer></v-spacer>
                             <v-btn icon>
                                 <v-icon class="grey--text">share</v-icon>
@@ -82,7 +79,7 @@
 
                 <!-- Modal (expand keep) -->
                 <v-dialog v-model="dialog" lazy absolute :width="viewWidth">
-                    <keep :deletable="true"></keep>
+                    <keep></keep>
                 </v-dialog>
 
 
