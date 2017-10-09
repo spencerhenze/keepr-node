@@ -1,83 +1,117 @@
 <template>
     <div class="keep">
 
-        <v-layout row>
-            <v-flex xs12>
-                <v-dialog v-model="dialog" lazy absolute width="100%">
-                    <v-card>
-                        <!-- picture & Title -->
-                        <v-card-media class="modal-image" :src="activeKeep.imgUrl" :height="imgHeight">
-                            <v-container fill-height fluid>
-                                <v-layout fill-height>
-                                    <v-flex xs12 align-end flexbox>
-                                        <span class="headline white--text" v-text="activeKeep.name"></span>
-                                    </v-flex>
-                                </v-layout>
-                            </v-container>
-                        </v-card-media>
-
-                        <!-- button row -->
-                        <v-card-actions class="white">
-                            <v-spacer></v-spacer>
-                            <v-btn v-if="loggedIn" icon @click.stop="ShowSaveKeepMenu">
-                                <v-icon class="grey--text">bookmark</v-icon>
-                            </v-btn>
-                            <v-btn icon>
-                                <v-icon class="grey--text">share</v-icon>
-                            </v-btn>
-                        </v-card-actions>
-
-                        <!-- description and counter displays -->
-                        <v-card-text>
-                            <span class="white--text" v-text="activeKeep.description"></span>
-                        </v-card-text>
-                        <v-flex>
-                            <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon><span class="grey--text" v-text="activeKeep.views.length"></span>
-                            <v-icon class="grey--text bottom-icons">bookmark</v-icon><span class="grey--text" v-text="activeKeep.saves"></span>
+        <v-card>
+            <!-- picture & Title -->
+            <v-card-media class="modal-image" :src="activeKeep.imgUrl" :height="minImgHeight">
+                <v-container fill-height fluid>
+                    <v-layout fill-height>
+                        <v-flex xs12 align-end flexbox>
+                            <span class="headline white--text" v-text="activeKeep.name"></span>
                         </v-flex>
-                    </v-card>
-                </v-dialog>
-            </v-flex>
-        </v-layout>
+                    </v-layout>
+                </v-container>
+            </v-card-media>
+
+            <!-- button row -->
+            <v-card-actions class="white">
+                <v-btn v-if="deletable" icon @click="RemoveKeep(activeKeep)">
+                    <v-icon class="grey--text remove-icon">fa-trash</v-icon>
+                </v-btn>
+
+                <v-spacer></v-spacer>
+                <v-btn v-if="loggedIn" icon @click.stop="ShowSaveKeepMenu">
+                    <v-icon class="grey--text">bookmark</v-icon>
+                </v-btn>
+                <v-btn icon>
+                    <v-icon class="grey--text">share</v-icon>
+                </v-btn>
+            </v-card-actions>
+
+            <!-- description and counter displays -->
+            <v-card-text>
+                <span class="white--text" v-text="activeKeep.description"></span>
+            </v-card-text>
+            <v-layout row class="card-footer-row">
+                <v-flex xs12 md6 class="counters-expanded">
+                    <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon>
+                    <span class="grey--text" v-text="activeKeep.views.length"></span>
+                    <v-icon class="grey--text bottom-icons">bookmark</v-icon>
+                    <span class="grey--text" v-text="activeKeep.saves"></span>
+                </v-flex>
+                <!-- Chip  -->
+                <v-flex xs12 md6 class="chip-keep-expanded">
+                    <router-link :to="'/users/' + activeKeep.creatorId">
+                        <v-chip>
+                            <v-avatar>
+                                <img :src="activeKeep.creatorPhoto" alt="creator photo">
+                            </v-avatar>
+                            {{activeKeep.creatorName}}
+                        </v-chip>
+                    </router-link>
+                </v-flex>
+            </v-layout>
+        </v-card>
 
     </div>
 </template>
 
 <script>
-    function CalcImgHeight() {
+    function CalculateModalW() {
         var vw = Math.max(document.documentElement.clientWidth, window.innerWidth)
-        return .71428 * vw;
+        if (vw <= 600) {
+            return "90%"
+        }
+        else if (600 < vw && vw <= 768) {
+            var width = (-45 / 302) * vw + (25140 / 151)
+            return width.toString() + "%";
+        }
+        else if (768 < vw && vw <= 1264) {
+            var width = (-35 / 302) * vw + (25140 / 151)
+            return width.toString() + "%";
+        }
+        else if (vw > 1264) {
+            return "25%"
+        }
     }
+
+    function CalcMinImgH() {
+        var vw = Math.max(document.documentElement.clientWidth, window.innerWidth)
+        return .45 * vw + 'px'
+    }
+
 
     export default {
         name: 'keep',
         data() {
             return {
-                dialog: true,
-                imgHeight: CalcImgHeight()
+                viewWidth: CalculateModalW(),
+                minImgHeight: CalcMinImgH(),
             }
         },
         methods: {
-            openCloud() {
-                this.signedIn()
-                cloudinary.openUploadWidget({ cloud_name: 'tattoo-me', upload_preset: 'tattoopng' },
-                    (error, result) => {
-                        result[0].tags = this.tags
-                        this.$store.dispatch('sendDesign', result)
-                    });
-            }
+            RemoveKeep(keep) {
+                this.$store.dispatch("RemoveVaultKeep", keep._id)
+                this.dialog = false;
+            },
+
+
+
         },
+        props: [
+            'deletable'
+        ],
         computed: {
+            activeKeep() {
+                return this.$store.state.activeKeep
+            },
             loggedIn() {
                 return this.$store.state.loggedIn;
             },
-            activeKeep() {
-                return this.$store.state.activeKeep;
-            }
         },
-        mounted() {
-            this.$store.dispatch("GetKeep", this.$route.params.keepId)
-        }
+        beforeDestroy() {
+            this.$store.dispatch('GetKeeps')
+        },
     }
 
 </script>
@@ -86,6 +120,31 @@
 <style scoped>
     .bottom-icons {
         margin-left: 15px;
+        margin-right: 0.8rem;
         margin-bottom: 10px;
+    }
+
+
+    .chip-keep {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+        margin-right: 10px;
+    }
+
+    .chip-keep-expanded {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1.1rem;
+        margin-right: 1.5rem;
+        margin-left: 3rem;
+    }
+
+    .counters-expanded {
+        margin-left: 1.1rem;
+    }
+
+    .card-footer-row {
+        display: flex;
     }
 </style>

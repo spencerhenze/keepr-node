@@ -33,7 +33,7 @@
             <v-card-text>
               <span class="white--text" v-text="card.description"></span>
             </v-card-text>
-            <v-layout row wrap>
+            <v-layout row class="card-footer-row">
               <v-flex xs12 md6>
                 <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon>
                 <span class="grey--text" v-text="card.views.length"></span>
@@ -57,56 +57,7 @@
 
         <!-- Modal (expanded view)-->
         <v-dialog v-model="dialog" lazy absolute :width="viewWidth">
-          <v-card>
-            <!-- picture & Title -->
-            <v-card-media class="modal-image" :src="activeKeep.imgUrl">
-              <v-container fill-height fluid>
-                <v-layout fill-height>
-                  <v-flex xs12 align-end flexbox>
-                    <span class="headline white--text" v-text="activeKeep.name"></span>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-media>
-
-            <!-- button row -->
-            <v-card-actions class="white">
-              <v-spacer></v-spacer>
-              <!-- <v-btn v-if="loggedIn" icon>
-                <v-icon class="grey--text">favorite</v-icon>
-              </v-btn> -->
-              <v-btn v-if="loggedIn" icon @click.stop="ShowSaveKeepMenu">
-                <v-icon class="grey--text">bookmark</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon class="grey--text">share</v-icon>
-              </v-btn>
-            </v-card-actions>
-
-            <!-- description and counter displays -->
-            <v-card-text>
-              <span class="white--text" v-text="activeKeep.description"></span>
-            </v-card-text>
-            <v-layout row wrap>
-              <v-flex xs12 md6>
-                <v-icon class="grey--text bottom-icons">remove_red_eye</v-icon>
-                <span class="grey--text" v-text="activeKeep.views.length"></span>
-                <v-icon class="grey--text bottom-icons">bookmark</v-icon>
-                <span class="grey--text" v-text="activeKeep.saves"></span>
-              </v-flex>
-              <!-- Chip  -->
-              <v-flex xs12 md6 class="chip-keep">
-                <router-link :to="'/users/' + activeKeep.creatorId">
-                  <v-chip>
-                    <v-avatar>
-                      <img :src="activeKeep.creatorPhoto" alt="creator photo">
-                    </v-avatar>
-                    {{activeKeep.creatorName}}
-                  </v-chip>
-                </router-link>
-              </v-flex>
-            </v-layout>
-          </v-card>
+          <keep></keep>
         </v-dialog>
 
         <!-- save keep modal -->
@@ -153,6 +104,8 @@
 </template>
 
 <script>
+  import Keep from './Keep'
+
   function CalculateModalW() {
     var vw = Math.max(document.documentElement.clientWidth, window.innerWidth)
     if (vw <= 600) {
@@ -187,6 +140,9 @@
         showSaveMenu: false,
         selectedVault: null
       }
+    },
+    components: {
+      Keep
     },
     methods: {
       expandKeep(keep) {
@@ -272,5 +228,21 @@
     justify-content: flex-end;
     margin-bottom: 10px;
     margin-right: 10px;
+  }
+
+  .chip-keep-expanded {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.1rem;
+    margin-right: 1.5rem;
+    margin-left: 3rem;
+  }
+
+  .counters-expanded {
+    margin-left: 1.1rem;
+  }
+
+  .card-footer-row {
+    display: flex;
   }
 </style>
