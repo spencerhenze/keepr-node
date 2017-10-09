@@ -40,8 +40,16 @@ var store = new vuex.Store({
         activeVault: {},
         activeKeep: { views: [] },
         saveKeepSuccess: false,
+        showSaveMenu: false,
+        mainDialog: false
     },
     mutations: {
+        setShowSaveMenu(store, value) {
+            store.showSaveMenu = value;
+        },
+        setMainDialog(store, value) {
+            store.mainDialog = value;
+        },
         setDefaultState(store) {
             store.user = {};
             store.userKeeps = []

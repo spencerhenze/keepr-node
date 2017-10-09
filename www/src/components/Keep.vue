@@ -6,8 +6,13 @@
             <v-card-media class="modal-image" :src="activeKeep.imgUrl" :height="minImgHeight">
                 <v-container fill-height fluid>
                     <v-layout fill-height>
-                        <v-flex xs12 align-end flexbox>
+                        <v-flex xs12 align-end flexbox class="dialog-header">
                             <span class="headline white--text" v-text="activeKeep.name"></span>
+                            <v-spacer></v-spacer>
+                            <v-btn fab medium class="transparent" style="box-shadow:none" @click="CloseWindow">
+                                <v-icon medium>close</v-icon>
+                            </v-btn>
+
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -91,10 +96,24 @@
             }
         },
         methods: {
+            SaveKeep() {
+                this.$store.dispatch("SaveActiveKeep", this.selectedVault._id)
+                this.$store.commit("setShowSaveMenu", false);
+                this.$store.commit("setMainDialog", false);
+            },
+
+            CloseWindow() {
+                this.$store.commit("setMainDialog", false);
+            },
+
             RemoveKeep(keep) {
                 this.$store.dispatch("RemoveVaultKeep", keep._id)
                 this.dialog = false;
             },
+            ShowSaveKeepMenu() {
+                this.$store.commit("setMainDialog", false)
+                this.$store.commit("setShowSaveMenu", true)
+            }
 
 
 
@@ -123,6 +142,11 @@
         margin-left: 15px;
         margin-right: 0.8rem;
         margin-bottom: 10px;
+    }
+
+    .dialog-header {
+        display: flex;
+        align-items: flex-start;
     }
 
 

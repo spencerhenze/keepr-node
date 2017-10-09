@@ -56,17 +56,24 @@
         <!-- end load results -->
 
         <!-- Modal (expanded view)-->
-        <v-dialog v-model="dialog" lazy absolute :width="viewWidth">
+        <v-dialog v-model="dialog" lazy absolute :width="viewWidth" persistent>
           <keep></keep>
         </v-dialog>
 
         <!-- save keep modal -->
-        <v-dialog v-model="showSaveMenu" lazy absolute :width="viewWidth">
+        <v-dialog v-model="showSaveMenu" lazy absolute :width="viewWidth" persistent>
           <v-card>
             <v-card-media class="modal-image" :src="activeKeep.imgUrl" height="300">
               <v-container fill-height fluid>
                 <v-layout fill-height>
-                  <span class="headline white--text">{{activeKeep.name}}</span>
+                  <v-flex xs12 align-end flexbox class="save-menu-header">
+                    <span class="headline white--text" v-text="activeKeep.name"></span>
+                    <v-spacer></v-spacer>
+                    <v-btn fab medium class="transparent" style="box-shadow:none" @click="CloseSaveWindow">
+                      <v-icon medium>close</v-icon>
+                    </v-btn>
+
+                  </v-flex>
                 </v-layout>
               </v-container>
             </v-card-media>
@@ -88,6 +95,7 @@
 
         <v-dialog v-model="saveKeepSuccess" lazy absolute persistent :width="viewWidth">
           <v-card>
+
             <v-card-title class="headline">Success</v-card-title>
             <v-card-text>
               <p>
@@ -136,8 +144,7 @@
       return {
         viewWidth: CalculateModalW(),
         minImgHeight: CalcMinImgH(),
-        dialog: false,
-        showSaveMenu: false,
+        // dialog: false,
         selectedVault: null
       }
     },
@@ -146,24 +153,29 @@
     },
     methods: {
       expandKeep(keep) {
-        this.dialog = true;
+        this.$store.commit("setMainDialog", true);
         this.$store.dispatch('SetActiveKeep', keep)
         this.$store.dispatch('AddView', keep)
       },
-      ShowSaveKeepMenu() {
-        this.dialog = false;
-        this.showSaveMenu = true;
+      CloseSaveWindow() {
+        this.$store.commit("setShowSaveMenu", false);
+        this.$store.commit("setMainDialog", false);
+
       },
       SaveKeep() {
         this.$store.dispatch("SaveActiveKeep", this.selectedVault._id)
-        this.showSaveMenu = false;
-        this.dialog = false;
+        this.$store.commit("setShowSaveMenu", false);
+        this.$store.commit("setMainDialog", false);
+
       },
       CloseSuccessMessage() {
         this.$store.commit("SetSaveKeepSuccess", false)
       }
     },
     computed: {
+      dialog() {
+        return this.$store.state.mainDialog;
+      },
       results() {
         return this.$store.state.results;
       },
@@ -175,6 +187,9 @@
       },
       vaults() {
         return this.$store.state.vaults;
+      },
+      showSaveMenu() {
+        return this.$store.state.showSaveMenu;
       },
       saveKeepSuccess() {
         return this.$store.state.saveKeepSuccess;
@@ -244,5 +259,10 @@
 
   .card-footer-row {
     display: flex;
+  }
+
+  .save-menu-header {
+    display: flex;
+    align-items: flex-start;
   }
 </style>
