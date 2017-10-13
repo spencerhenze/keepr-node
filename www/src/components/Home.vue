@@ -56,12 +56,12 @@
         <!-- end load results -->
 
         <!-- Modal (expanded view)-->
-        <v-dialog v-model="dialog" lazy absolute :width="viewWidth" persistent>
+        <v-dialog v-model="dialog" lazy absolute :width="imgWidth" persistent>
           <keep></keep>
         </v-dialog>
 
         <!-- save keep modal -->
-        <v-dialog v-model="showSaveMenu" lazy absolute :width="viewWidth" persistent>
+        <v-dialog v-model="showSaveMenu" lazy absolute :width="formWidth" persistent>
           <v-card>
             <v-card-media class="modal-image" :src="activeKeep.imgUrl" height="300">
               <v-container fill-height fluid>
@@ -93,7 +93,7 @@
           </v-card>
         </v-dialog>
 
-        <v-dialog v-model="saveKeepSuccess" lazy absolute persistent :width="viewWidth">
+        <v-dialog v-model="saveKeepSuccess" lazy absolute persistent :width="formWidth">
           <v-card>
 
             <v-card-title class="headline">Success</v-card-title>
@@ -137,13 +137,20 @@
     return .45 * vw + 'px'
   }
 
+  function CalcImgWidth() {
+    var vw = Math.max(document.documentElement.clientWidth, window.innerWidth)
+    var keepImgH = .45 * vw //+ 'px'
+    return (1.45 * keepImgH) + "px"
+  }
+
 
   export default {
     name: 'home',
     data() {
       return {
-        viewWidth: CalculateModalW(),
+        formWidth: CalculateModalW(),
         minImgHeight: CalcMinImgH(),
+        imgWidth: CalcImgWidth(),
         // dialog: false,
         selectedVault: null
       }
@@ -205,9 +212,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .modal-image {
+  /* .modal-image {
     height: 50vh !important;
-  }
+  } */
 
   h1,
   h2 {

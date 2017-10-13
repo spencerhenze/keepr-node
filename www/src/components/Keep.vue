@@ -91,7 +91,7 @@
         name: 'keep',
         data() {
             return {
-                viewWidth: CalculateModalW(),
+                // viewWidth: CalculateModalW(),
                 minImgHeight: CalcMinImgH(),
             }
         },
@@ -172,4 +172,8 @@
     .card-footer-row {
         display: flex;
     }
+
+    /* .modal-image {
+        height: 50vh !important;
+    } */
 </style>

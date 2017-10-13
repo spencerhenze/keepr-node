@@ -155,11 +155,19 @@
     return Math.max(document.documentElement.clientWidth, window.innerWidth)
   }
 
+  function CalcImgWidth() {
+    var vw = Math.max(document.documentElement.clientWidth, window.innerWidth)
+    var keepImgH = .45 * vw //+ 'px'
+    return 1.45 * keepImgH
+  }
+
+
   export default {
     data() {
       return {
         viewWidth: CalculateModalW(),
         cWidth: GetClientWidth(),
+        imgWidth: CalcImgWidth(),
         drawer: false,
         items: [
           { icon: 'bubble_chart', title: 'Inspire' }
